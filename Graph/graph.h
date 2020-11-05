@@ -46,7 +46,8 @@ public:
     bool isConnected()= 0;
     bool isStronglyConnected() throw();
     bool empty();
-    void clear()= 0;    
+    void clear()= 0;  
+      
     void displayVertex(string id)= 0;
     bool findById(string id) = 0;
     void display() = 0;
