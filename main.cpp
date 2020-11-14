@@ -4,7 +4,6 @@
 #include "Parser/parser.h"
 #include "Graph/UndirectedGraph.h"
 #include "Graph/DirectedGraph.h"
-using namespace std;
 
 int main(int argc, char *argv[]) {
     std::cout << "================================================" << std::endl;
@@ -19,12 +18,14 @@ int main(int argc, char *argv[]) {
     graph.insertVertex("third", 'c');
     std::cout << boolalpha << graph.createEdge("first", "second", 1.4) << "\n";
     std::cout << boolalpha << graph.createEdge("second", "third", 3.5) << "\n";
-    std::cout << boolalpha << graph.deleteEdge("third", "second") << "\n";
-
+    //std::cout << boolalpha << graph.deleteEdge("first", "second") << "\n";
+    graph("first", "second") = 1.6;
     //std::cout << boolalpha << graph.deleteVertex("first") << "\n";
     //std::cout << boolalpha << graph.deleteVertex("second") << "\n";
     //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\n";
-    //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\n";
+    //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\
+
+    std::cout << "density: " << graph.density() << "\n";
     graph.display();
 
     

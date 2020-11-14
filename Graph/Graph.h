@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <queue>
 #include <iostream>
+
 using namespace std;
 
 template<typename TV, typename TE>
@@ -42,6 +43,7 @@ struct Vertex {
 
     void killSelf() {
         delete this;
+        this = nullptr;
     }
 };
 
@@ -49,6 +51,7 @@ template<typename TV, typename TE>
 class Graph {
 protected:
     std::unordered_map<string, Vertex<TV, TE> *> vertexes;
+    int totEdges = 0;
 
 public:
     //TODO
@@ -57,9 +60,9 @@ public:
     //FindById, FindEdge(by starVertex, endVertex)
     //Density, connected, strongly connected, bipartite
     //{Kruskal, prim} (only undirected)
-    Graph(){}
+    Graph() {}
 
-    ~Graph(){}
+    virtual ~Graph() {}
 
     virtual bool insertVertex(string id, TV vertex) = 0;
 
@@ -69,13 +72,13 @@ public:
 
     virtual bool deleteEdge(string id1, string id2) = 0;
 
-    /*TE &operator()(string start, string end) = 0;
+    virtual TE &operator()(string id1, string id2) = 0;
 
-    float density() = 0;
+    virtual float density() = 0;
 
-    bool isDense(float threshold = 0.5) = 0;
+    virtual bool isDense(float threshold = 0.5) = 0;
 
-    bool isConnected() = 0;
+    /*bool isConnected() = 0;
 
     bool isStronglyConnected() = 0;
 

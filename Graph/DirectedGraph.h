@@ -18,13 +18,13 @@ public:
 
     bool deleteEdge(string id1, string id2) override;
 
-    /*TE &operator()(string start, string end) override;
+    TE &operator()(string id1, string id2) override;
 
     float density() override;
 
     bool isDense(float threshold = 0.5) override;
 
-    bool isConnected() override;
+    /*bool isConnected() override;
 
     bool isStronglyConnected() override;
 
@@ -73,6 +73,7 @@ bool DirectedGraph<TV, TE>::createEdge(string id1, string id2, TE w) {
     v[1] = *this->vertexes.at(id2);
     Edge<TV, TE> *edge = new Edge<TV, TE>(v, w);
     this->vertexes.at(id1)->edges.push_back(edge);
+    this->totEdges++;
     return true;
 }
 
@@ -85,7 +86,9 @@ bool DirectedGraph<TV, TE>::deleteVertex(string id) {
             for (auto it2 = (it->second)->edges.begin(); it2 != (it->second)->edges.end(); ++it2) {
                 if ((*it2)->vertexes[0].id == id || (*it2)->vertexes[1].id == id) {
                     (*it2)->killSelf();
+                    (*it2) = nullptr;
                     (it->second)->edges.erase(it2);
+                    this->totEdges--;
                     break;
                 }
             }
@@ -104,7 +107,9 @@ bool DirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
     for (auto it = edges.begin(); it != edges.end(); ++it) {
         if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2) {
             (*it)->killSelf();
+            (*it) = nullptr;
             edges.erase(it);
+            this->totEdges--;
             return true;
 
         }
@@ -113,22 +118,31 @@ bool DirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
 }
 
 
-/*
 template<typename TV, typename TE>
-TE &DirectedGraph<TV, TE>::operator()(string start, string end) {
-    return Graph::operator()(start, end);
+TE &DirectedGraph<TV, TE>::operator()(string id1, string id2) {
+    if (!findById(id1))
+        throw std::out_of_range("Graph does not contain vertex");
+    auto &edges = this->vertexes[id1]->edges;
+    for (auto it = edges.begin(); it != edges.end(); ++it) {
+        if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2)
+            return (*it)->weight;
+
+    }
+    throw std::out_of_range("Graph does not contain edge");
 }
+
 
 template<typename TV, typename TE>
 float DirectedGraph<TV, TE>::density() {
-    return Graph::density();
+    return float(this->totEdges / float((this->vertexes.size() * (this->vertexes.size() - 1))));
 }
 
 template<typename TV, typename TE>
 bool DirectedGraph<TV, TE>::isDense(float threshold) {
-    return Graph::isDense(threshold);
+    return density() > threshold;
 }
 
+/*
 template<typename TV, typename TE>
 bool DirectedGraph<TV, TE>::isConnected() {
     return Graph::isConnected();
