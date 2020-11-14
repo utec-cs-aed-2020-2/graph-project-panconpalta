@@ -3,9 +3,9 @@
 --------
 
 ## Integrantes
-- 
-- 
-- 
+- Anthony Aguilar 
+- Juan Pablo Lozada
+- Joaquin Ramirez
 
 ----
 
