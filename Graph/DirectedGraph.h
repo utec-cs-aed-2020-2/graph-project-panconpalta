@@ -142,11 +142,41 @@ bool DirectedGraph<TV, TE>::isDense(float threshold) {
     return density() > threshold;
 }
 
-/*
+template<typename TV, typename TE>
+void visit(unordered_map<int,bool>& visited, int id){
+      visited[id]=true;
+      int id2 = 0;
+      for(auto it = this->vertexes[id]->edges.begin(); it!=this->vertexes[id]->edges.end(); it++){
+        for(auto it2 = this->vertexes.begin(); it2!= this->vertexes.end(); it2++){
+          if(it2->second == (*it)->vertexes[1]){
+            id2 = it2->first;
+            break;
+          }
+        }
+        if(visited[id2]==false){
+          visit(visited,id2);
+        }
+      }
+    }
+}
+
 template<typename TV, typename TE>
 bool DirectedGraph<TV, TE>::isConnected() {
-    return Graph::isConnected();
+    unordered_map<int, bool> visited;
+    for(auto it = this->vertexes.begin(); it!= this->vertexes.end(); it++){
+      visited[it->first] = false;
+    }
+    auto it = this->vertexes.begin();
+    visit(visited, it->first);
+    for(auto it= visited.begin(); it!= visited.end(); it++){
+      if(it->second == false){
+        return false;
+      }
+    }
+    return true;
 }
+
+/*
 
 template<typename TV, typename TE>
 bool DirectedGraph<TV, TE>::isStronglyConnected() {
