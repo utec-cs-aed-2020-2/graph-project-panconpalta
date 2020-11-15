@@ -85,10 +85,9 @@ public:
     bool empty() = 0;
 
     void clear() = 0;
+ */
+    virtual void displayVertex(string id) = 0;
 
-    void displayVertex(string id) = 0;
-
-    */
     virtual bool findById(string id) = 0;
 
     virtual void display() = 0;
