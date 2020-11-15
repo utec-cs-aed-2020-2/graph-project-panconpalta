@@ -35,6 +35,7 @@ public:
 
     bool isDense(float threshold = 0.5) override;
 
+
     /*bool isConnected() override;
 
     bool isStronglyConnected() override;
@@ -101,7 +102,6 @@ bool UnDirectedGraph<TV, TE>::deleteVertex(string id) {
         for (auto it2 = other_edges.begin(); it2 != other_edges.end(); ++it2) {
             if ((*it)->vertexes[0].id == id || (*it)->vertexes[1].id == id) {
                 (*it2)->killSelf();
-                (*it2) = nullptr;
                 other_edges.erase(it2);
                 break;
             }
@@ -123,8 +123,8 @@ bool UnDirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
                                                              : this->vertexes[(*it)->vertexes[1].id]->edges;
             for (auto it2 = other_edges.begin(); it2 != other_edges.end(); ++it2) {
                 if ((*it2)->vertexes[0].id == id1 || (*it2)->vertexes[1].id == id1) {
+                    (*it)->weight = INT_FAST8_MIN;
                     (*it2)->killSelf();
-                    (*it2) = nullptr;
                     other_edges.erase(it2);
                     this->totEdges--;
                 }

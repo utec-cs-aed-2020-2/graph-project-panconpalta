@@ -85,8 +85,8 @@ bool DirectedGraph<TV, TE>::deleteVertex(string id) {
         if (it->first != id) {
             for (auto it2 = (it->second)->edges.begin(); it2 != (it->second)->edges.end(); ++it2) {
                 if ((*it2)->vertexes[0].id == id || (*it2)->vertexes[1].id == id) {
+                    (*it2)->weight = INT_FAST8_MIN;
                     (*it2)->killSelf();
-                    (*it2) = nullptr;
                     (it->second)->edges.erase(it2);
                     this->totEdges--;
                     break;
@@ -106,8 +106,8 @@ bool DirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
     auto &edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
         if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2) {
+            (*it)->weight = INT_FAST8_MIN;
             (*it)->killSelf();
-            (*it) = nullptr;
             edges.erase(it);
             this->totEdges--;
             return true;
