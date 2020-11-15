@@ -31,10 +31,10 @@ public:
     bool empty() override;
 
     void clear() override;
-
+*/
     void displayVertex(string id) override;
 
-    */bool findById(string id) override;
+    bool findById(string id) override;
 
     void display() override;
 };
@@ -162,12 +162,20 @@ template<typename TV, typename TE>
 void DirectedGraph<TV, TE>::clear() {
     Graph::clear();
 }
-
+*/
 template<typename TV, typename TE>
 void DirectedGraph<TV, TE>::displayVertex(string id) {
-    Graph::displayVertex(id);
+    auto it = this->vertexes.find(id);
+    if (it == this->vertexes.end())
+        throw std::out_of_range("Graph does not contain vertex");
+    std::cout << it->second->data << ": ";
+    for (auto it2 = it->second->edges.begin(); it2 != it->second->edges.end(); ++it2) {
+        auto val = (*it2)->vertexes[0].id != id ? (*it2)->vertexes[0].id : (*it2)->vertexes[1].id;
+        std::cout << val << '(' << (*it2)->weight << ')' << ", ";
+    }
+    std::cout << std::endl;
 }
-*/
+
 template<typename TV, typename TE>
 bool DirectedGraph<TV, TE>::findById(string id) {
     return this->vertexes.find(id) != this->vertexes.end();
