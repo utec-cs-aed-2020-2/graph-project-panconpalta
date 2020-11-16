@@ -2,65 +2,54 @@
 #define NONDIRECTEDGRAPH_H
 
 #include "Graph.h"
+/////////////////////////////////////////
+#define diGraph_t DirectedGraph<data_t, weight_t>
+/////////////////////////////////////////
 
-template<typename TV, typename TE>
-class DirectedGraph : public Graph<TV, TE> {
+template<typename data_t, typename weight_t>
+class DirectedGraph : public graph_t {
 public:
     DirectedGraph();
-
     ~DirectedGraph();
-
-    bool insertVertex(string id, TV vertex) override;
-
-    bool createEdge(string id1, string id2, TE w) override;
-
+    bool insertVertex(string id, data_t vertex) override;
+    bool createEdge(string id1, string id2, weight_t w) override;
     bool deleteVertex(string id) override;
-
     bool deleteEdge(string id1, string id2) override;
-
-    TE &operator()(string id1, string id2) override;
-
+    weight_t &operator()(string id1, string id2) override;
     float density() override;
-
     bool isDense(float threshold = 0.5) override;
-
     /*bool isConnected() override;
-
     bool isStronglyConnected() override;
-
     bool empty() override;
-
     void clear() override;
 */
     void displayVertex(string id) override;
-
     bool findById(string id) override;
-
     void display() override;
 };
 
-template<typename TV, typename TE>
-DirectedGraph<TV, TE>::DirectedGraph() : Graph<TV, TE>() {
+template<typename data_t, typename weight_t>
+diGraph_t::DirectedGraph() : Graph<data_t, weight_t>() {
 
 }
 
-template<typename TV, typename TE>
-DirectedGraph<TV, TE>::~DirectedGraph() {
+template<typename data_t, typename weight_t>
+diGraph_t::~DirectedGraph() {
 
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::insertVertex(string id, TV vertex) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::insertVertex(string id, data_t vertex) {
     if (!findById(id)) {
-        Vertex<TV, TE> *v = new Vertex<TV, TE>{id, vertex, std::list<Edge<TV, TE> *>()};
+        vertex_t *v = new vertex_t{id, vertex, std::list<edge_t *>()};
         this->vertexes.insert(std::make_pair(id, v));
         return true;
     }
     return false;
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::createEdge(string id1, string id2, TE w) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::createEdge(string id1, string id2, weight_t w) {
     if (!findById(id1))
         return false;
     auto edges = this->vertexes[id1]->edges;
@@ -68,17 +57,17 @@ bool DirectedGraph<TV, TE>::createEdge(string id1, string id2, TE w) {
         if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2)
             return false;
     }
-    Vertex<TV, TE> *v = new Vertex<TV, TE>[2];
+    vertex_t *v = new vertex_t[2];
     v[0] = *this->vertexes.at(id1);
     v[1] = *this->vertexes.at(id2);
-    Edge<TV, TE> *edge = new Edge<TV, TE>(v, w);
+    edge_t *edge = new edge_t(v, w);
     this->vertexes.at(id1)->edges.push_back(edge);
     this->totEdges++;
     return true;
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::deleteVertex(string id) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::deleteVertex(string id) {
     if (!findById(id))
         return false;
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
@@ -99,8 +88,8 @@ bool DirectedGraph<TV, TE>::deleteVertex(string id) {
     return true;
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::deleteEdge(string id1, string id2) {
     if (!findById(id1))
         return false;
     auto &edges = this->vertexes[id1]->edges;
@@ -118,8 +107,8 @@ bool DirectedGraph<TV, TE>::deleteEdge(string id1, string id2) {
 }
 
 
-template<typename TV, typename TE>
-TE &DirectedGraph<TV, TE>::operator()(string id1, string id2) {
+template<typename data_t, typename weight_t>
+weight_t &diGraph_t::operator()(string id1, string id2) {
     if (!findById(id1))
         throw std::out_of_range("Graph does not contain vertex");
     auto &edges = this->vertexes[id1]->edges;
@@ -132,39 +121,39 @@ TE &DirectedGraph<TV, TE>::operator()(string id1, string id2) {
 }
 
 
-template<typename TV, typename TE>
-float DirectedGraph<TV, TE>::density() {
+template<typename data_t, typename weight_t>
+float diGraph_t::density() {
     return float(this->totEdges / float((this->vertexes.size() * (this->vertexes.size() - 1))));
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::isDense(float threshold) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::isDense(float threshold) {
     return density() > threshold;
 }
 
 /*
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::isConnected() {
+template<typename data_t, typename weight_t>
+bool diGraph_t::isConnected() {
     return Graph::isConnected();
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::isStronglyConnected() {
+template<typename data_t, typename weight_t>
+bool diGraph_t::isStronglyConnected() {
     return Graph::isStronglyConnected();
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::empty() {
+template<typename data_t, typename weight_t>
+bool diGraph_t::empty() {
     return Graph::empty();
 }
 
-template<typename TV, typename TE>
-void DirectedGraph<TV, TE>::clear() {
+template<typename data_t, typename weight_t>
+void diGraph_t::clear() {
     Graph::clear();
 }
 */
-template<typename TV, typename TE>
-void DirectedGraph<TV, TE>::displayVertex(string id) {
+template<typename data_t, typename weight_t>
+void diGraph_t::displayVertex(string id) {
     auto it = this->vertexes.find(id);
     if (it == this->vertexes.end())
         throw std::out_of_range("Graph does not contain vertex");
@@ -176,13 +165,13 @@ void DirectedGraph<TV, TE>::displayVertex(string id) {
     std::cout << std::endl;
 }
 
-template<typename TV, typename TE>
-bool DirectedGraph<TV, TE>::findById(string id) {
+template<typename data_t, typename weight_t>
+bool diGraph_t::findById(string id) {
     return this->vertexes.find(id) != this->vertexes.end();
 }
 
-template<typename TV, typename TE>
-void DirectedGraph<TV, TE>::display() {
+template<typename data_t, typename weight_t>
+void diGraph_t::display() {
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
         std::cout << it->second->data << ": ";
         for (auto it2 = it->second->edges.begin(); it2 != it->second->edges.end(); ++it2) {
