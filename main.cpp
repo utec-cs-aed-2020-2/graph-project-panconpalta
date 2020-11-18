@@ -2,8 +2,8 @@
 
 #include "Tester/tester.h"
 #include "Parser/parser.h"
-#include "Graph/UndirectedGraph.h"
-#include "Graph/DirectedGraph.h"
+#include "Graph/UndirectedGraph.cpp"
+#include "Graph/DirectedGraph.cpp"
 
 int main(int argc, char *argv[]) {
     std::cout << "================================================" << std::endl;
@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
     graph.insertVertex("first", 'a');
     graph.insertVertex("second", 'b');
     graph.insertVertex("third", 'c');
-    std::cout << boolalpha << graph.createEdge("first", "second", 1.4) << "\n";
-    std::cout << boolalpha << graph.createEdge("second", "third", 3.5) << "\n";
+    std::cout << std::boolalpha << graph.createEdge("first", "second", 1.4) << "\n";
+    std::cout << std::boolalpha << graph.createEdge("second", "third", 3.5) << "\n";
     //std::cout << boolalpha << graph.deleteEdge("first", "second") << "\n";
     graph("first", "second") = 1.6;
     //std::cout << boolalpha << graph.deleteVertex("first") << "\n";
@@ -26,8 +26,12 @@ int main(int argc, char *argv[]) {
     //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\
 
     std::cout << "density: " << graph.density() << "\n";
+    std::cout << "empty: " << graph.empty() <<"\n";
+    std::cout << "connected: " << graph.isConnected() <<"\n";
+    std::cout << "strongly connected: "<< graph.isStronglyConnected() <<"\n";
     graph.display();
-
+    graph.clear();
+    std::cout << "empty: " << graph.empty() <<"\n";
     
     return EXIT_SUCCESS;
 }
