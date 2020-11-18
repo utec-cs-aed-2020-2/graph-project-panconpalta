@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     //std::cout << boolalpha << graph.deleteVertex("first") << "\n";
     //std::cout << boolalpha << graph.deleteVertex("second") << "\n";
     //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\n";
-    //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\
+    //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\n";
 
     std::cout << "density: " << graph.density() << "\n";
     std::cout << "empty: " << graph.empty() <<"\n";

@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <queue>
 #include <iostream>
+#include "dsarray.h"
 
 template<typename data_t, typename weight_t>
 struct Edge;
@@ -60,4 +61,9 @@ void visit(umap<id_t,bool>& visited, umap<id_t, vertex_t*>& vertexes, id_t id){
 		if(visited[(*it)->vertexes[1].id]==false)
 			visit(visited,vertexes,(*it)->vertexes[1].id);
 	}
+}
+
+template<typename data_t, typename weight_t>
+id_t getIdOf(vertex_t v){
+	return v.id;
 }

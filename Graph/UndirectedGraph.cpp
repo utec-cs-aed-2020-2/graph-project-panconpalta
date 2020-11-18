@@ -32,7 +32,6 @@ bool undiGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
     v[1] = *this->vertexes.at(id2);
     edge_t *edge = new edge_t(v, w);
     this->vertexes.at(id1)->edges.push_back(edge);
-    priority_queue.push(edge);
     this->vertexes.at(id2)->edges.push_back(edge);
     this->totEdges++;
     return true;
@@ -70,7 +69,6 @@ bool undiGraph_t::deleteEdge(id_t id1, id_t id2) {
                                                              : this->vertexes[(*it)->vertexes[1].id]->edges;
             for (auto it2 = other_edges.begin(); it2 != other_edges.end(); ++it2) {
                 if ((*it2)->vertexes[0].id == id1 || (*it2)->vertexes[1].id == id1) {
-                    (*it)->weight = INT_FAST8_MIN;
                     (*it2)->killSelf();
                     other_edges.erase(it2);
                     this->totEdges--;
@@ -121,12 +119,10 @@ bool undiGraph_t::isConnected() {
   return false;
 }
 
-/*
 template<typename data_t, typename weight_t>
 bool undiGraph_t::isStronglyConnected() {
 	return isConnected();
 }
-*/
 
 template<typename data_t, typename weight_t>
 bool undiGraph_t::empty() {
@@ -177,3 +173,39 @@ void undiGraph_t::display() {
     }
 }
 
+
+template<typename data_t, typename weight_t>
+undiGraph_t undiGraph_t::execKruskal(){
+    undiGraph_t Kruskal;
+    std::vector<id_t> vs(this->vertexes.size());
+    Kqueue_t EdgesToCheck;
+    //Preparing for the algorithm
+    for(auto& it: this->vertexes){
+        //making a copy of the graph without edges
+        Kruskal.insertVertex(it.first,it.second->data);
+        //adding the vertexes to the disjoin set
+        vs.push_back(it.first);
+        //adding the edges to the priority queue
+        for(auto& edgePtr: it.second->edges){
+            //the edges are duplicated cuz the graph is undirected
+            EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
+        }
+    }
+    dset_t VertexSets(vs);
+    //Preparation done
+    //Executing the algorithm
+    edge_t* currentEdge=nullptr;
+    while(!EdgesToCheck.empty()){
+        currentEdge=EdgesToCheck.top().second;
+        EdgesToCheck.pop();
+        //checking if the nodes of the edge are already conected
+        if(VertexSets.Find(getIdOf(currentEdge->vertexes[0])) == VertexSets.Find(getIdOf(currentEdge->vertexes[1])))
+            continue;
+        //else
+        VertexSets.Union(VertexSets.Find(getIdOf(currentEdge->vertexes[0])),
+                         VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
+        Kruskal.createEdge(getIdOf(currentEdge->vertexes[0]),getIdOf(currentEdge->vertexes[1]),currentEdge->weight);
+    }
+
+    return Kruskal;
+}
