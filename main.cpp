@@ -26,8 +26,12 @@ int main(int argc, char *argv[]) {
     //std::cout << boolalpha << graph.deleteEdge("second", "third") << "\
 
     std::cout << "density: " << graph.density() << "\n";
+    std::cout << "empty: " << graph.empty() <<"\n";
+    std::cout << "connected: " << graph.isConnected() <<"\n";
+    std::cout << "strongly connected: "<< graph.isStronglyConnected() <<"\n";
     graph.display();
-
+    graph.clear();
+    std::cout << "empty: " << graph.empty() <<"\n";
     
     return EXIT_SUCCESS;
 }
