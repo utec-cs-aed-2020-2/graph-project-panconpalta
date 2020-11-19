@@ -124,7 +124,7 @@ bool undiGraph_t::isStronglyConnected() {
 	return isConnected();
 }
 
-template<typename TV, typename TE>
+template<typename data_t, typename weight_t>
 bool undiGraph_t::isBipartite(){
   umap<id_t, bool> color;
   color[this->vertexes.begin()->first] = true;
