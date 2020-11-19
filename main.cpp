@@ -10,7 +10,7 @@
 #include "Parser/parser.h"
 
 int main(int argc, char *argv[]) {
-	std::ifstream file("Parser/Data/pe.json", std::ifstream::in); 
+	std::ifstream file("Parser/Data/airports.json", std::ifstream::in); 
 	std::string json="",line;
 	if(file.is_open()){
 		while(file>>line){
@@ -26,22 +26,26 @@ int main(int argc, char *argv[]) {
 	//UnDirectedGraph<rapidjson::GenericObject<false,rapidjson::Value>,double> graph;
 	UnDirectedGraph<Airport,double> graph;
 	for(auto& it: doc.GetArray()){
-		std::cout<<it["Airport_ID"].GetString()<<"\n";
-		std::cout<<it["Name"].GetString()<<"\n";
-		std::cout<<it["City"].GetString()<<"\n";
-		std::cout<<it["Country"].GetString()<<"\n";
-		std::cout<<it["Latitude"].GetString()<<"\n";
-		std::cout<<it["Longitude"].GetString()<<"\n";
-		std::cout<<"-------------------------------------------\n";
-		graph.insertVertex(it["Airport_ID"].GetString(),Airport(
-					std::stoi(it["Airport_ID"].GetString()),
-					it["Name"].GetString(),
-					it["City"].GetString(),
-					it["Country"].GetString(),
-					std::stod(it["Latitude"].GetString()),
-					std::stod(it["Longitude"].GetString())
-					)
-				);
+		try{
+			std::cout<<it["Airport_ID"].GetString()<<"\n";
+			std::cout<<it["Name"].GetString()<<"\n";
+			std::cout<<it["City"].GetString()<<"\n";
+			std::cout<<it["Country"].GetString()<<"\n";
+			std::cout<<it["Latitude"].GetString()<<"\n";
+			std::cout<<it["Longitude"].GetString()<<"\n";
+			std::cout<<"-------------------------------------------\n";
+			graph.insertVertex(it["Airport_ID"].GetString(),Airport(
+						std::stoi(it["Airport_ID"].GetString()),
+						it["Name"].GetString(),
+						it["City"].GetString(),
+						it["Country"].GetString(),
+						std::stod(it["Latitude"].GetString()),
+						std::stod(it["Longitude"].GetString())
+						)
+					);
+			}catch(...){
+				continue;
+			}
 	}
 	std::cout<<"----------------------END OF PARSING: vertex added---------------------\n";
 	graph.display();
