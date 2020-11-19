@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     std::cout << "empty: " << graph.empty() <<"\n";
     std::cout << "connected: " << graph.isConnected() <<"\n";
     std::cout << "strongly connected: "<< graph.isStronglyConnected() <<"\n";
+    std::cout << "bipartite: "<< graph.isBipartite() <<"\n";
     graph.display();
     graph.clear();
     std::cout << "empty: " << graph.empty() <<"\n";
