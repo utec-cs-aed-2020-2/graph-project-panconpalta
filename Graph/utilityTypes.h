@@ -36,6 +36,10 @@ struct Edge {
         delete this;
     }
 
+	//~Edge(){
+		//killSelf();
+	//}
+
     Edge(vertex_t *v, weight_t w) {
         vertexes = v;
         weight = w;
@@ -48,11 +52,37 @@ struct Vertex {
     data_t data;
     std::list<edge_t *> edges;
 
+	Vertex(){}
+
     void killSelf() {
         delete this;
     }
 };
 
+struct City {
+    int id;
+    string name;
+    double latitude;
+    double longitude;
+};
+
+struct Airport {
+    int id;
+    string name;
+    string city;
+    string country;
+    double latitude;
+    double longitude;
+	Airport(){}
+	Airport(int i,string n,string ci, string co, double lat, double lon):
+		id(i),
+		name(n),
+		city(ci),
+		country(co),
+		latitude(lat),
+		longitude(lon)
+	{}
+};
 ////////////////functions////////////////////////
 template<typename data_t, typename weight_t>
 void visit(umap<id_t,bool>& visited, umap<id_t, vertex_t*>& vertexes, id_t id){
@@ -67,3 +97,4 @@ template<typename data_t, typename weight_t>
 id_t getIdOf(vertex_t v){
 	return v.id;
 }
+

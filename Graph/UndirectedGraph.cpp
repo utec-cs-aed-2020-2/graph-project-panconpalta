@@ -11,8 +11,10 @@ undiGraph_t::~UnDirectedGraph() {
 template<typename data_t, typename weight_t>
 bool undiGraph_t::insertVertex(id_t id, data_t vertex) {
     if (!findById(id)) {
-        vertex_t *v = new vertex_t{id, vertex, std::list<edge_t *>()};
-        this->vertexes.insert(std::make_pair(id, v));
+        vertex_t *v = new vertex_t;
+		v->data=vertex;
+		v->id=id;
+		this->vertexes[id]=v;
         return true;
     }
     return false;
@@ -20,7 +22,7 @@ bool undiGraph_t::insertVertex(id_t id, data_t vertex) {
 
 template<typename data_t, typename weight_t>
 bool undiGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
-    if (!findById(id1))
+    if (!findById(id1) || !findById(id1))
         return false;
     auto edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -81,6 +83,13 @@ bool undiGraph_t::deleteEdge(id_t id1, id_t id2) {
     return false;
 }
 
+template<typename data_t, typename weight_t>
+data_t undiGraph_t::operator[](id_t key){
+	if(this->vertexes.find(key)!=this->vertexes.end())
+		return this->vertexes[key]->data;
+	else
+		return data_t();
+}
 
 template<typename data_t, typename weight_t>
 weight_t &undiGraph_t::operator()(id_t id1, id_t id2) {
@@ -124,7 +133,7 @@ bool undiGraph_t::isStronglyConnected() {
 	return isConnected();
 }
 
-template<typename TV, typename TE>
+template<typename data_t, typename weight_t>
 bool undiGraph_t::isBipartite(){
   umap<id_t, bool> color;
   color[this->vertexes.begin()->first] = true;
@@ -173,10 +182,10 @@ void undiGraph_t::displayVertex(id_t id) {
     auto it = this->vertexes.find(id);
     if (it == this->vertexes.end())
         throw std::out_of_range("Graph does not contain vertex");
-    std::cout << it->second->data << ": ";
+    std::cout << it->second->id << ": ";
     for (auto it2 = it->second->edges.begin(); it2 != it->second->edges.end(); ++it2) {
-        auto val = (*it2)->vertexes[0].id != id ? (*it2)->vertexes[0].id : (*it2)->vertexes[1].id;
-        std::cout << val << '(' << (*it2)->weight << ')' << ", ";
+        auto val_id = (*it2)->vertexes[0].id != id ? (*it2)->vertexes[0].id : (*it2)->vertexes[1].id;
+        std::cout << val_id << '(' << (*it2)->weight << ')' << ", ";
     }
     std::cout << std::endl;
 }
@@ -189,11 +198,11 @@ bool undiGraph_t::findById(id_t id) {
 template<typename data_t, typename weight_t>
 void undiGraph_t::display() {
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
-        std::cout << it->second->data << ": ";
+        std::cout << it->second->id << ": ";
         for (auto it2 = it->second->edges.begin(); it2 != it->second->edges.end(); ++it2) {
-            auto val = (*it2)->vertexes[0].data;
-            if ((*it2)->vertexes[0].data == it->second->data)
-                val = (*it2)->vertexes[1].data;
+            auto val = (*it2)->vertexes[0].id;
+            if ((*it2)->vertexes[0].id == it->second->id)
+                val = (*it2)->vertexes[1].id;
             std::cout << val << '(' << (*it2)->weight << ')' << ", ";
         }
         std::cout << std::endl;
