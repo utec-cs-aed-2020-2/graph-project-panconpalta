@@ -52,6 +52,8 @@ diGraph_t::DirectedGraph() : Graph<data_t, weight_t>() {
 
 template<typename data_t, typename weight_t>
 diGraph_t::~DirectedGraph() {
+    if (this->vertexes.size() != 0)
+        clear();
 }
 
 template<typename data_t, typename weight_t>

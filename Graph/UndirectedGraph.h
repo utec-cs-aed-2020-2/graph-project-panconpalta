@@ -48,6 +48,8 @@ public:
     data_t operator[](id_t key);
 
     undiGraph_t execKruskal();
+
+    undiGraph_t execPrim(id_t start);
 };
 
 template<typename data_t, typename weight_t>
@@ -56,6 +58,8 @@ undiGraph_t::UnDirectedGraph():Graph<data_t, weight_t>() {
 
 template<typename data_t, typename weight_t>
 undiGraph_t::~UnDirectedGraph() {
+    if (!this->vertexes.empty())
+        clear();
 }
 
 template<typename data_t, typename weight_t>
@@ -218,21 +222,23 @@ bool undiGraph_t::empty() {
 
 template<typename data_t, typename weight_t>
 void undiGraph_t::clear() {
+    uset<edge_t *> deleted;
     for (auto &it_vertex: this->vertexes) {
         for (auto &it_edge: it_vertex.second->edges) {
-            if (it_edge != nullptr) {
+            if (deleted.find(it_edge) == deleted.end()) {
                 it_edge->killSelf();
-                it_edge = nullptr;
+                deleted.insert(it_edge);
             }
         }
         //it_vertex.second->edges.clear();
     }
-    for(auto &it_vertex: this->vertexes)
-        if(it_vertex.second != nullptr){
+    for (auto &it_vertex: this->vertexes)
+        if (it_vertex.second != nullptr) {
             it_vertex.second->killSelf();
             it_vertex.second = nullptr;
         }
     this->vertexes.clear();
+    deleted.clear();
 }
 
 template<typename data_t, typename weight_t>
@@ -300,8 +306,65 @@ undiGraph_t undiGraph_t::execKruskal() {
                          VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
         Kruskal.createEdge(getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight);
     }
+    vs.clear();
 
     return Kruskal;
+}
+
+template<typename data_t, typename weight_t>
+UnDirectedGraph<data_t, weight_t> UnDirectedGraph<data_t, weight_t>::execPrim(id_t start) {
+    if (!findById(start))
+        throw std::out_of_range("Graph does not contain vertex");
+    undiGraph_t Prim;
+    std::vector<id_t> vs;
+    uset<id_t> visited;
+    Pqueue_t EdgesToCheck;
+    vs.push_back(start);
+    Prim.insertVertex(start, this->vertexes[start]->data);
+    for (auto &edgePtr: this->vertexes[start]->edges) {
+        EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
+        edgePtr->vertexes[0].id != start ? vs.push_back(edgePtr->vertexes[0].id) : vs.push_back(
+                edgePtr->vertexes[1].id);
+    }
+    visited.insert(start);
+    edge_t *currentEdge = nullptr;
+    dset_t VertexSets(vs);
+
+    while (!EdgesToCheck.empty()) {
+        currentEdge = EdgesToCheck.top().second;
+        EdgesToCheck.pop();
+        //checking if the nodes of the edge are already conected
+        if (VertexSets.Find(getIdOf(currentEdge->vertexes[0])) == VertexSets.Find(getIdOf(currentEdge->vertexes[1])))
+            continue;
+        //else
+        VertexSets.Union(VertexSets.Find(getIdOf(currentEdge->vertexes[0])),
+                         VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
+
+        if (Prim.vertexes.find(getIdOf(currentEdge->vertexes[0])) == Prim.vertexes.end())
+            Prim.insertVertex(getIdOf(currentEdge->vertexes[0]),
+                              this->vertexes[getIdOf(currentEdge->vertexes[0])]->data);
+        if (Prim.vertexes.find(getIdOf(currentEdge->vertexes[1])) == Prim.vertexes.end())
+            Prim.insertVertex(getIdOf(currentEdge->vertexes[1]),
+                              this->vertexes[getIdOf(currentEdge->vertexes[1])]->data);
+
+        Prim.createEdge(getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight);
+
+        for (int i = 0; i < 2; ++i) {
+            auto current_v = currentEdge->vertexes[i].id;
+            if (visited.find(current_v) == visited.end()) {
+                for (auto &edgePtr: this->vertexes[current_v]->edges) {
+                    auto other_v =
+                            edgePtr->vertexes[0].id != current_v ? edgePtr->vertexes[0].id : edgePtr->vertexes[1].id;
+                    if (visited.find(other_v) == visited.end()) {
+                        EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
+                        VertexSets.Add(other_v);
+                    }
+                }
+                visited.insert(current_v);
+            }
+        }
+    }
+    return Prim;
 }
 
 #endif
