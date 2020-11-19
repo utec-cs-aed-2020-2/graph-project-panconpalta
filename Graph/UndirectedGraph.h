@@ -31,6 +31,8 @@ public:
     void displayVertex(id_t id) override;
     void display() override;
 
+	data_t operator[](id_t key);
+
 	undiGraph_t execKruskal();
 };
 #endif
