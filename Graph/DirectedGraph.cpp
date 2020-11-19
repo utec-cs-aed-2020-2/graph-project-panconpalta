@@ -124,6 +124,33 @@ bool diGraph_t::isStronglyConnected() {
   return true;
 }
 
+template<typename TV, typename TE>
+bool diGraph_t::isBipartite(){
+  umap<id_t, bool> color;
+  color[this->vertexes.begin()->first] = true;
+  queue <id_t> q; 
+  q.push(this->vertexes.begin()->first); 
+
+  while (!q.empty()){
+    id_t current = q.front(); 
+    q.pop(); 
+    for (auto transition: this->vertexes[current]->edges){
+      if(transition->vertexes[1].id==current){
+        return false;
+      }
+      if(color.find(transition->vertexes[1].id)==color.end()){
+        color[transition->vertexes[1].id] = !color[current];
+        q.push(transition->vertexes[1].id);
+      }
+      else if(color.find(transition->vertexes[1].id)!=color.end() && color[transition->vertexes[1].id] == color[current]){
+        return false;
+      }
+      
+    }
+  }
+    return true;
+}
+
 template<typename data_t, typename weight_t>
 bool diGraph_t::empty() {
     auto it = this->vertexes.begin();
