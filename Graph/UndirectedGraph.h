@@ -24,6 +24,7 @@ public:
     bool isDense(float threshold = 0.5) override;
     bool isConnected() override;
     bool isStronglyConnected() override;
+    bool isBipartite() override;
     bool empty() override;
     bool findById(id_t id) override;
 
