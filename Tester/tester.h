@@ -42,11 +42,11 @@ void Tester::executeParser(file json_file) {
     performance.insert(std::make_pair("buildGraph", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC),
                                                                    double(e2 - s2) / double(CLOCKS_PER_SEC))));
     s1 = clock();
-    unDirectedGraph.execKruskal();
+    //unDirectedGraph.execKruskal();
     e1 = clock();
     performance.insert(std::make_pair("kruskal", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
     s1 = clock();
-    unDirectedGraph.execPrim("2789");
+    //unDirectedGraph.execPrim("2789");
     e1 = clock();
     performance.insert(std::make_pair("prim", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
     /*s1 = clock();
