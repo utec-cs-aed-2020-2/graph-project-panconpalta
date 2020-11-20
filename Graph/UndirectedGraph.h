@@ -1,5 +1,5 @@
-#ifndef UNDIRECweight_tDGRAPH_H
-#define UNDIRECweight_tDGRAPH_H
+#ifndef UNDIRECTEDGRAPH_H
+#define UNDIRECTEDGRAPH_H
 
 #include "Graph.h"
 /////////////////////////////////////////
@@ -7,14 +7,13 @@
 /////////////////////////////////////////
 
 template<typename data_t, typename weight_t>
-class Kruskal;
-
-template<typename data_t, typename weight_t>
 class UnDirectedGraph : public Graph<data_t, weight_t> {
 private:
-
     friend
     class Kruskal<data_t, weight_t>;
+
+    friend
+    class Prim<data_t, weight_t>;
 
 public:
     UnDirectedGraph();
@@ -311,7 +310,7 @@ undiGraph_t undiGraph_t::execKruskal() {
 }
 
 template<typename data_t, typename weight_t>
-UnDirectedGraph<data_t, weight_t> UnDirectedGraph<data_t, weight_t>::execPrim(id_t start) {
+undiGraph_t undiGraph_t::execPrim(id_t start) {
     if (!findById(start))
         throw std::out_of_range("Graph does not contain vertex");
     undiGraph_t Prim;
