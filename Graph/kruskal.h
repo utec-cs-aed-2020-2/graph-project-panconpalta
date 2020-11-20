@@ -1,66 +1,65 @@
-//
-// Created by AIO on 19/11/2020.
-//
-
 #ifndef GRAPH_PROJECT_PANCONPALTA_KRUSKAL_H
 #define GRAPH_PROJECT_PANCONPALTA_KRUSKAL_H
+#include "Graph.h"
 
-//#include "UndirectedGraph.h"
+
 template<typename data_t, typename weight_t>
 class UnDirectedGraph;
 
 template<typename data_t, typename weight_t>
 class Kruskal {
 private:
-    undiGraph_t mst;
+    umap<id_t, vertex_t *>  v;
+    std::vector<std::tuple<id_t, id_t, weight_t>> kruskal;
 public:
-    Kruskal(UnDirectedGraph<data_t, weight_t> *graph);
+    explicit Kruskal(UnDirectedGraph<data_t, weight_t> const &graph);
+
     ~Kruskal();
-    undiGraph_t apply();
+
+    UnDirectedGraph<data_t, weight_t> apply();
 };
 
 template<typename data_t, typename weight_t>
-Kruskal<data_t, weight_t>::Kruskal(UnDirectedGraph<data_t, weight_t> *graph) {
-    std::vector<id_t> vs(graph->vertexes.size());
+Kruskal<data_t, weight_t>::Kruskal(UnDirectedGraph<data_t, weight_t> const &graph) {
+    std::vector<id_t> vs(graph.vertexes.size());
     Kqueue_t EdgesToCheck;
-    //Preparing for the algorithm
-    for (auto it: graph->vertexes) {
-        //making a copy of the graph without edges
-        mst.insertVertex(it.first, it.second->data);
-        //adding the vertexes to the disjoin set
+    for (auto it: graph.vertexes) {
+        v.insert({it.first, it.second});
         vs.push_back(it.first);
-        //adding the edges to the priority queue
         for (auto edgePtr: it.second->edges) {
-            //the edges are duplicated cuz the graph is undirected
             EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
         }
     }
     dset_t VertexSets(vs);
-    //Preparation done
-    //Executing the algorithm
     edge_t *currentEdge = nullptr;
     while (!EdgesToCheck.empty()) {
         currentEdge = EdgesToCheck.top().second;
         EdgesToCheck.pop();
-        //checking if the nodes of the edge are already conected
         if (VertexSets.Find(getIdOf(currentEdge->vertexes[0])) == VertexSets.Find(getIdOf(currentEdge->vertexes[1])))
             continue;
-        //else
         VertexSets.Union(VertexSets.Find(getIdOf(currentEdge->vertexes[0])),
                          VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
-        mst.createEdge(getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight);
+        kruskal.push_back({getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight});
     }
     vs.clear();
 }
 
 template<typename data_t, typename weight_t>
 Kruskal<data_t, weight_t>::~Kruskal() {
-
+    v.clear();
+    kruskal.clear();
 }
 
 template<typename data_t, typename weight_t>
 UnDirectedGraph<data_t, weight_t> Kruskal<data_t, weight_t>::apply() {
-    return mst;
+    UnDirectedGraph<data_t, weight_t> tree;
+    for(auto& it : v){
+        tree.insertVertex(it.first, it.second->data);
+    }
+    for(auto& it : kruskal){
+        tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
+    }
+    return tree;
 }
 
 
