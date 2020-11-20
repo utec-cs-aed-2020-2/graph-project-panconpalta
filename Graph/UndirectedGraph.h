@@ -50,9 +50,9 @@ public:
 
     data_t operator[](id_t key);
 
-    undiGraph_t execKruskal();
+    //undiGraph_t execKruskal();
 
-    undiGraph_t execPrim(id_t start);
+    //undiGraph_t execPrim(id_t start);
 };
 
 template<typename data_t, typename weight_t>
@@ -271,7 +271,7 @@ void undiGraph_t::display() {
     }
 }
 
-
+/*
 template<typename data_t, typename weight_t>
 undiGraph_t undiGraph_t::execKruskal() {
     undiGraph_t Kruskal;
@@ -364,6 +364,6 @@ undiGraph_t undiGraph_t::execPrim(id_t start) {
     }
     return Prim;
 }
-
+*/
 
 #endif
