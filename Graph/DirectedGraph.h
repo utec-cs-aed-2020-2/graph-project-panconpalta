@@ -29,7 +29,7 @@ public:
 
     bool isConnected() override;
 
-    bool isStronglyConnected() override;
+    bool isStronglyConnected();
 
     bool isBipartite() override;
 

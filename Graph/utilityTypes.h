@@ -1,6 +1,7 @@
 #include <list>
 #include <vector>
 #include <unordered_map>
+#include <map>
 #include <unordered_set>
 #include <queue>
 #include <iostream>
@@ -16,6 +17,7 @@ class Graph;
 
 /////////////define types////////////////////////
 #define umap std::unordered_map
+#define map std::map
 #define uset std::unordered_set
 #define id_t std::string
 #define vertex_t Vertex<data_t, weight_t>

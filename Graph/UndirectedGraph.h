@@ -7,8 +7,14 @@
 /////////////////////////////////////////
 
 template<typename data_t, typename weight_t>
+class Kruskal;
+
+template<typename data_t, typename weight_t>
 class UnDirectedGraph : public Graph<data_t, weight_t> {
 private:
+
+    friend
+    class Kruskal<data_t, weight_t>;
 
 public:
     UnDirectedGraph();
@@ -30,8 +36,6 @@ public:
     bool isDense(float threshold = 0.5) override;
 
     bool isConnected() override;
-
-    bool isStronglyConnected() override;
 
     bool isBipartite() override;
 
@@ -180,11 +184,6 @@ bool undiGraph_t::isConnected() {
         visited.clear();
     }
     return false;
-}
-
-template<typename data_t, typename weight_t>
-bool undiGraph_t::isStronglyConnected() {
-    return isConnected();
 }
 
 template<typename data_t, typename weight_t>
@@ -366,5 +365,6 @@ UnDirectedGraph<data_t, weight_t> UnDirectedGraph<data_t, weight_t>::execPrim(id
     }
     return Prim;
 }
+
 
 #endif

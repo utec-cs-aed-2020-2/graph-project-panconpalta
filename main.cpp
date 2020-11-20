@@ -1,6 +1,7 @@
 #include "Tester/tester.h"
 
-int main(int argc, char *argv[]) {
-    Tester::executeParser(file::airports);
-    return 0;
+int main() {
+    //Tester::executeParser();
+    //Tester::executeExamples();
+    return EXIT_SUCCESS;
 }
