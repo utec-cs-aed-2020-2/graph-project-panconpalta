@@ -1,5 +1,6 @@
 #ifndef GRAPH_PROJECT_PANCONPALTA_PRIM_H
 #define GRAPH_PROJECT_PANCONPALTA_PRIM_H
+
 #include "Graph.h"
 
 
@@ -8,10 +9,10 @@ class UnDirectedGraph;
 
 template<typename data_t, typename weight_t>
 class Prim {
-    umap<id_t, vertex_t *>  v;
+    umap<id_t, vertex_t *> v;
     std::vector<std::tuple<id_t, id_t, weight_t>> prim;
 public:
-    explicit Prim(UnDirectedGraph<data_t, weight_t>  &graph, id_t start);
+    explicit Prim(UnDirectedGraph<data_t, weight_t> &graph, id_t start);
 
     ~Prim();
 
@@ -19,7 +20,7 @@ public:
 };
 
 template<typename data_t, typename weight_t>
-Prim<data_t, weight_t>::Prim(UnDirectedGraph<data_t, weight_t>  &graph, id_t start) {
+Prim<data_t, weight_t>::Prim(UnDirectedGraph<data_t, weight_t> &graph, id_t start) {
     if (!graph.findById(start))
         throw std::out_of_range("Graph does not contain vertex");
 
@@ -47,10 +48,10 @@ Prim<data_t, weight_t>::Prim(UnDirectedGraph<data_t, weight_t>  &graph, id_t sta
 
         if (v.find(getIdOf(currentEdge->vertexes[0])) == v.end())
             v.insert({getIdOf(currentEdge->vertexes[0]),
-                              graph.vertexes[getIdOf(currentEdge->vertexes[0])]});
+                      graph.vertexes[getIdOf(currentEdge->vertexes[0])]});
         if (v.find(getIdOf(currentEdge->vertexes[1])) == v.end())
             v.insert({getIdOf(currentEdge->vertexes[1]),
-                              graph.vertexes[getIdOf(currentEdge->vertexes[1])]});
+                      graph.vertexes[getIdOf(currentEdge->vertexes[1])]});
 
         prim.push_back({getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight});
 
@@ -82,10 +83,10 @@ Prim<data_t, weight_t>::~Prim() {
 template<typename data_t, typename weight_t>
 UnDirectedGraph<data_t, weight_t> Prim<data_t, weight_t>::apply() {
     UnDirectedGraph<data_t, weight_t> tree;
-    for(auto& it : v){
+    for (auto &it : v) {
         tree.insertVertex(it.first, it.second->data);
     }
-    for(auto& it : prim){
+    for (auto &it : prim) {
         tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
     }
     return tree;

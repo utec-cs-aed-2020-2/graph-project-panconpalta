@@ -1,5 +1,6 @@
 #ifndef GRAPH_PROJECT_PANCONPALTA_KRUSKAL_H
 #define GRAPH_PROJECT_PANCONPALTA_KRUSKAL_H
+
 #include "Graph.h"
 
 
@@ -9,7 +10,7 @@ class UnDirectedGraph;
 template<typename data_t, typename weight_t>
 class Kruskal {
 private:
-    umap<id_t, vertex_t *>  v;
+    umap<id_t, vertex_t *> v;
     std::vector<std::tuple<id_t, id_t, weight_t>> kruskal;
 public:
     explicit Kruskal(UnDirectedGraph<data_t, weight_t> const &graph);
@@ -53,10 +54,10 @@ Kruskal<data_t, weight_t>::~Kruskal() {
 template<typename data_t, typename weight_t>
 UnDirectedGraph<data_t, weight_t> Kruskal<data_t, weight_t>::apply() {
     UnDirectedGraph<data_t, weight_t> tree;
-    for(auto& it : v){
+    for (auto &it : v) {
         tree.insertVertex(it.first, it.second->data);
     }
-    for(auto& it : kruskal){
+    for (auto &it : kruskal) {
         tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
     }
     return tree;
