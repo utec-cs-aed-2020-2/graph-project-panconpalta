@@ -15,7 +15,12 @@ class Tester {
 private:
     static void unDirectedExample();
 
+    static void unDirectedSwitch(UnDirectedGraph<data_type, weight_type> &graph, int input);
+
     static void directedExample();
+
+    static void directedSwitch(DirectedGraph<data_type, weight_type> &graph, int input);
+
 
 public:
     Tester() = default;
@@ -42,11 +47,13 @@ void Tester::executeParser(file json_file) {
     performance.insert(std::make_pair("buildGraph", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC),
                                                                    double(e2 - s2) / double(CLOCKS_PER_SEC))));
     s1 = clock();
-    //unDirectedGraph.execKruskal();
+    Kruskal<Airport, double> kruskal(unDirectedGraph);
+    auto kResult = kruskal.apply();
     e1 = clock();
     performance.insert(std::make_pair("kruskal", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
     s1 = clock();
-    //unDirectedGraph.execPrim("2789");
+    Prim<Airport, double> prim(unDirectedGraph, "2789");
+    auto pResult = prim.apply();
     e1 = clock();
     performance.insert(std::make_pair("prim", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
     /*s1 = clock();
@@ -99,27 +106,251 @@ void Tester::executeExamples() {
 }
 
 void Tester::unDirectedExample() {
-    int n;
-    std::cout << "Choose number of vertexes:";
-    std::cin >> n;
-    id_t id;
-    data_type data;
-
     UnDirectedGraph<data_type, weight_type> graph;
-    for (int i = 0; i < n; ++i) {
-        std::cout << "\nid " << i + 1 << ":";
-        std::cin >> id;
-        std::cout << "\ndata " << i + 1 << ":";
-        std::cin >> data;
-        graph.insertVertex(id, data);
+    int input = 1;
+    while (input != 0) {
+        std::cout
+                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Kruskal\n7. Prim\t\t8. Connected\t9. Density\n10. Clear\t0. Finish\nChoose:";
+        std::cin >> input;
+        if (input == 0)
+            break;
+        if (input > 10)
+            continue;
+        unDirectedSwitch(graph, input);
     }
-    graph.display();
-    //TODO
+    std::cout << "Finished!\n";
+}
+
+void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int input) {
+    int n;
+    switch (input) {
+        case 1: {
+            std::cout << "Choose number of vertexes:";
+            std::cin >> n;
+            id_t id;
+            data_type data;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id:";
+                std::cin >> id;
+                std::cout << i + 1 << ". data:";
+                std::cin >> data;
+                if (!graph.insertVertex(id, data))
+                    std::cout << "Vertex already exists!\n";
+                else
+                    std::cout << "Vertex added!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 2: {
+            std::cout << "Choose number of edges:";
+            std::cin >> n;
+            id_t id1, id2;
+            weight_type weight;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id (from):";
+                std::cin >> id1;
+                std::cout << i + 1 << ". id (to):";
+                std::cin >> id2;
+                std::cout << i + 1 << ". weight:";
+                std::cin >> weight;
+                if (!graph.createEdge(id1, id2, weight))
+                    std::cout << "Edge already exists!\n";
+                else
+                    std::cout << "Edge added!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 3: {
+            std::cout << "Choose number of vertexes:";
+            std::cin >> n;
+            id_t id;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id:";
+                std::cin >> id;
+                if (!graph.deleteVertex(id))
+                    std::cout << "Vertex does not exist\n";
+                else
+                    std::cout << "Vertex deleted!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 4: {
+            std::cout << "Choose number of edges:";
+            std::cin >> n;
+            id_t id1, id2;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id (from):";
+                std::cin >> id1;
+                std::cout << i + 1 << ". id (to):";
+                std::cin >> id2;
+                if (!graph.deleteEdge(id1, id2))
+                    std::cout << "Edge does not exist!\n";
+                else
+                    std::cout << "Edge deleted!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 5: {
+            graph.display();
+            std::cout << "\n";
+            break;
+        }
+        case 6: {
+            Kruskal<data_type, weight_type> kruskal(graph);
+            kruskal.apply().display();
+            std::cout << "\n";
+            break;
+        }
+        case 7: {
+            id_t input;
+            std::cout << "Choose start vertex:";
+            std::cin >> input;
+            try {
+                Prim<data_type, weight_type> prim(graph, input);
+                prim.apply().display();
+            }
+            catch (std::out_of_range) {
+                std::cout << "Vertex does not exist!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 8: {
+            std::cout << std::boolalpha << graph.isConnected() << "\n\n";
+            break;
+        }
+        case 9: {
+            std::cout << graph.density() << "\n\n";
+            break;
+        }
+        case 10: {
+            graph.clear();
+            std::cout << "Graph cleared!\n\n";
+            break;
+        }
+    }
 }
 
 void Tester::directedExample() {
-    ///TODO
+    DirectedGraph<data_type, weight_type> graph;
+    int input = 1;
+    while (input != 0) {
+        std::cout
+                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Connected\n7. Density \t8. Clear\t9. Strongly Connected\n0. Finish\nChoose:";
+        std::cin >> input;
+        if (input == 0)
+            break;
+        if (input > 10)
+            continue;
+        directedSwitch(graph, input);
+    }
+
+    std::cout << "Finished!\n";
 
 }
+
+void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input) {
+    int n;
+    switch (input) {
+        case 1: {
+            std::cout << "Choose number of vertexes:";
+            std::cin >> n;
+            id_t id;
+            data_type data;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id:";
+                std::cin >> id;
+                std::cout << i + 1 << ". data:";
+                std::cin >> data;
+                if (!graph.insertVertex(id, data))
+                    std::cout << "Vertex already exists!\n";
+                else
+                    std::cout << "Vertex added!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 2: {
+            std::cout << "Choose number of edges:";
+            std::cin >> n;
+            id_t id1, id2;
+            weight_type weight;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id (from):";
+                std::cin >> id1;
+                std::cout << i + 1 << ". id (to):";
+                std::cin >> id2;
+                std::cout << i + 1 << ". weight:";
+                std::cin >> weight;
+                if (!graph.createEdge(id1, id2, weight))
+                    std::cout << "Edge already exists!\n";
+                else
+                    std::cout << "Edge added!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 3: {
+            std::cout << "Choose number of vertexes:";
+            std::cin >> n;
+            id_t id;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id:";
+                std::cin >> id;
+                if (!graph.deleteVertex(id))
+                    std::cout << "Vertex does not exist\n";
+                else
+                    std::cout << "Vertex deleted!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 4: {
+            std::cout << "Choose number of edges:";
+            std::cin >> n;
+            id_t id1, id2;
+            for (int i = 0; i < n; ++i) {
+                std::cout << i + 1 << ". id (from):";
+                std::cin >> id1;
+                std::cout << i + 1 << ". id (to):";
+                std::cin >> id2;
+                if (!graph.deleteEdge(id1, id2))
+                    std::cout << "Edge does not exist!\n";
+                else
+                    std::cout << "Edge deleted!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 5: {
+            graph.display();
+            std::cout << "\n";
+            break;
+        }
+        case 6: {
+            std::cout << std::boolalpha << graph.isConnected() << "\n\n";
+            break;
+        }
+        case 7: {
+            std::cout << graph.density() << "\n\n";
+            break;
+        }
+        case 8: {
+            graph.clear();
+            std::cout << "Graph cleared!\n\n";
+            break;
+        }
+        case 9: {
+            std::cout << std::boolalpha << graph.isStronglyConnected() << "\n\n";
+            break;
+        }
+    }
+
+}
+
 
 #endif //GRAPH_PROJECT_PANCONPALTA_TESTER_H
