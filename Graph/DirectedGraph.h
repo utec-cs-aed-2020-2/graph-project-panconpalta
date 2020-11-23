@@ -70,6 +70,8 @@ bool diGraph_t::insertVertex(id_t id, data_t vertex) {
 
 template<typename data_t, typename weight_t>
 bool diGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
+    if (id1 == id2)
+        return false;
     if (!findById(id1))
         return false;
     auto edges = this->vertexes[id1]->edges;
@@ -110,6 +112,8 @@ bool diGraph_t::deleteVertex(id_t id) {
 
 template<typename data_t, typename weight_t>
 bool diGraph_t::deleteEdge(id_t id1, id_t id2) {
+    if (id1 == id2)
+        return false;
     if (!findById(id1))
         return false;
     auto &edges = this->vertexes[id1]->edges;
