@@ -36,7 +36,7 @@ void Tester::executeParser(file json_file) {
     parser.readJSON(json_file);
     UnDirectedGraph<Airport, double> unDirectedGraph;
     DirectedGraph<Airport, double> DirectedGraph;
-    map<std::string, std::pair<double, double>> performance;
+    umap<std::string, std::pair<double, double>> performance;
     clock_t s1, s2, e1, e2;
     s1 = clock();
     parser.uGraphMake(unDirectedGraph);
@@ -83,9 +83,9 @@ void Tester::executeParser(file json_file) {
     std::cout << "================================================" << std::endl;
 
     std::cout << "\nmethod\t\t\tunDirected\tdirected\n";
-    for (const auto &it : performance) {
-        std::cout << it.first << "\n";
-        std::cout << "\t\t\t" << it.second.first << " s\t\t" << it.second.second << " s\n";
+    for (auto it = performance.begin(); it != performance.end(); ++it) {
+        std::cout << it->first << "\n";
+        std::cout << "\t\t\t" << it->second.first << " s\t\t" << it->second.second << " s\n";
     }
 
 }
@@ -125,6 +125,7 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
     int n;
     switch (input) {
         case 1: {
+            std::cout << "1. Add Vertex\n";
             std::cout << "Choose number of vertexes:";
             std::cin >> n;
             id_t id;
@@ -143,6 +144,7 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 2: {
+            std::cout << "2. Add Edge\n";
             std::cout << "Choose number of edges:";
             std::cin >> n;
             id_t id1, id2;
@@ -163,6 +165,7 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 3: {
+            std::cout << "3. Delete Vertex\n";
             std::cout << "Choose number of vertexes:";
             std::cin >> n;
             id_t id;
@@ -178,6 +181,7 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 4: {
+            std::cout << "4. Delete Edge\n";
             std::cout << "Choose number of edges:";
             std::cin >> n;
             id_t id1, id2;
@@ -195,17 +199,20 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 5: {
+            std::cout << "5. Display\n";
             graph.display();
             std::cout << "\n";
             break;
         }
         case 6: {
+            std::cout << "6. Kruskal\n";
             Kruskal<data_type, weight_type> kruskal(graph);
             kruskal.apply().display();
             std::cout << "\n";
             break;
         }
         case 7: {
+            std::cout << "7. Prim\n";
             id_t input;
             std::cout << "Choose start vertex:";
             std::cin >> input;
@@ -220,14 +227,17 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 8: {
+            std::cout << "8. isConnected\n";
             std::cout << std::boolalpha << graph.isConnected() << "\n\n";
             break;
         }
         case 9: {
+            std::cout << "9. Density\n";
             std::cout << graph.density() << "\n\n";
             break;
         }
         case 10: {
+            std::cout << "10. Clear\n";
             graph.clear();
             std::cout << "Graph cleared!\n\n";
             break;
@@ -257,6 +267,7 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
     int n;
     switch (input) {
         case 1: {
+            std::cout << "1. Add Vertex\n";
             std::cout << "Choose number of vertexes:";
             std::cin >> n;
             id_t id;
@@ -275,6 +286,7 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             break;
         }
         case 2: {
+            std::cout << "2. Add Edge\n";
             std::cout << "Choose number of edges:";
             std::cin >> n;
             id_t id1, id2;
@@ -295,6 +307,7 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             break;
         }
         case 3: {
+            std::cout << "3. Delete Vertex\n";
             std::cout << "Choose number of vertexes:";
             std::cin >> n;
             id_t id;
@@ -310,6 +323,7 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             break;
         }
         case 4: {
+            std::cout << "4. Delete Edge\n";
             std::cout << "Choose number of edges:";
             std::cin >> n;
             id_t id1, id2;
@@ -327,24 +341,29 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             break;
         }
         case 5: {
+            std::cout << "5. Display\n";
             graph.display();
             std::cout << "\n";
             break;
         }
         case 6: {
+            std::cout << "6. isConnected\n";
             std::cout << std::boolalpha << graph.isConnected() << "\n\n";
             break;
         }
         case 7: {
+            std::cout << "7. Density\n";
             std::cout << graph.density() << "\n\n";
             break;
         }
         case 8: {
+            std::cout << "8. Clear\n";
             graph.clear();
             std::cout << "Graph cleared!\n\n";
             break;
         }
         case 9: {
+            std::cout << "9. isStronglyConnected\n";
             std::cout << std::boolalpha << graph.isStronglyConnected() << "\n\n";
             break;
         }
