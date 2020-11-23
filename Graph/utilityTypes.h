@@ -17,7 +17,6 @@ class Graph;
 
 /////////////define types////////////////////////
 #define umap std::unordered_map
-#define map std::map
 #define uset std::unordered_set
 #define id_t std::string
 #define vertex_t Vertex<data_t, weight_t>
