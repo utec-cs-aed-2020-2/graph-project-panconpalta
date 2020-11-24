@@ -37,7 +37,9 @@ public:
 
     virtual void displayVertex(id_t id) = 0;
 
-    virtual bool findById(id_t id) = 0;
+    virtual bool findVertex(id_t id) = 0;
+
+    virtual bool findEdge(id_t id1, id_t id2) = 0;
 
     virtual void clear() = 0;
 

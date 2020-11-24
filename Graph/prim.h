@@ -21,7 +21,7 @@ public:
 
 template<typename data_t, typename weight_t>
 Prim<data_t, weight_t>::Prim(UnDirectedGraph<data_t, weight_t> &graph, id_t start) {
-    if (!graph.findById(start))
+    if (!graph.findVertex(start))
         throw std::out_of_range("Graph does not contain vertex");
 
     std::vector<id_t> vs;

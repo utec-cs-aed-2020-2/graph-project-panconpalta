@@ -40,7 +40,9 @@ public:
 
     bool empty() override;
 
-    bool findById(id_t id) override;
+    bool findVertex(id_t id) override;
+
+    bool findEdge(id_t id1, id_t id2) override;
 
     void clear() override;
 
@@ -67,7 +69,7 @@ undiGraph_t::~UnDirectedGraph() {
 
 template<typename data_t, typename weight_t>
 bool undiGraph_t::insertVertex(id_t id, data_t vertex) {
-    if (!findById(id)) {
+    if (!findVertex(id)) {
         vertex_t *v = new vertex_t;
         v->data = vertex;
         v->id = id;
@@ -81,7 +83,7 @@ template<typename data_t, typename weight_t>
 bool undiGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
     if (id1 == id2)
         return false;
-    if (!findById(id1) || !findById(id1))
+    if (!findVertex(id1) || !findVertex(id1))
         return false;
     auto edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -100,7 +102,7 @@ bool undiGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
 
 template<typename data_t, typename weight_t>
 bool undiGraph_t::deleteVertex(id_t id) {
-    if (!findById(id))
+    if (!findVertex(id))
         return false;
     auto &edges = this->vertexes[id]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -123,7 +125,7 @@ template<typename data_t, typename weight_t>
 bool undiGraph_t::deleteEdge(id_t id1, id_t id2) {
     if (id1 == id2)
         return false;
-    if (!findById(id1))
+    if (!findVertex(id1))
         return false;
     auto &edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -154,7 +156,7 @@ data_t undiGraph_t::operator[](id_t key) {
 
 template<typename data_t, typename weight_t>
 weight_t &undiGraph_t::operator()(id_t id1, id_t id2) {
-    if (!findById(id1))
+    if (!findVertex(id1))
         throw std::out_of_range("Graph does not contain vertex");
     auto &edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -257,8 +259,21 @@ void undiGraph_t::displayVertex(id_t id) {
 }
 
 template<typename data_t, typename weight_t>
-bool undiGraph_t::findById(id_t id) {
+bool undiGraph_t::findVertex(id_t id) {
     return this->vertexes.find(id) != this->vertexes.end();
+}
+
+template<typename data_t, typename weight_t>
+bool undiGraph_t::findEdge(id_t id1, id_t id2) {
+    if (!findVertex(id1) || !findVertex(id2))
+        return false;
+    auto edges = this->vertexes[id1]->edges;
+    for (auto it = edges.begin(); it != edges.end(); ++it) {
+        if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2)
+            return true;
+    }
+    return false;
+
 }
 
 template<typename data_t, typename weight_t>
@@ -315,7 +330,7 @@ undiGraph_t undiGraph_t::execKruskal() {
 
 template<typename data_t, typename weight_t>
 undiGraph_t undiGraph_t::execPrim(id_t start) {
-    if (!findById(start))
+    if (!findVertex(start))
         throw std::out_of_range("Graph does not contain vertex");
     undiGraph_t Prim;
     std::vector<id_t> vs;

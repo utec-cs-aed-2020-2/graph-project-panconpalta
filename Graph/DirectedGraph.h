@@ -35,7 +35,9 @@ public:
 
     bool empty() override;
 
-    bool findById(id_t id) override;
+    bool findVertex(id_t id) override;
+
+    bool findEdge(id_t id1, id_t id2) override;
 
     void clear() override;
 
@@ -58,7 +60,7 @@ diGraph_t::~DirectedGraph() {
 
 template<typename data_t, typename weight_t>
 bool diGraph_t::insertVertex(id_t id, data_t vertex) {
-    if (!findById(id)) {
+    if (!findVertex(id)) {
         vertex_t *v = new vertex_t;
         v->data = vertex;
         v->id = id;
@@ -72,7 +74,7 @@ template<typename data_t, typename weight_t>
 bool diGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
     if (id1 == id2)
         return false;
-    if (!findById(id1))
+    if (!findVertex(id1))
         return false;
     auto edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -90,7 +92,7 @@ bool diGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
 
 template<typename data_t, typename weight_t>
 bool diGraph_t::deleteVertex(id_t id) {
-    if (!findById(id))
+    if (!findVertex(id))
         return false;
     for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
         if (it->first != id) {
@@ -113,7 +115,7 @@ template<typename data_t, typename weight_t>
 bool diGraph_t::deleteEdge(id_t id1, id_t id2) {
     if (id1 == id2)
         return false;
-    if (!findById(id1))
+    if (!findVertex(id1))
         return false;
     auto &edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -129,7 +131,7 @@ bool diGraph_t::deleteEdge(id_t id1, id_t id2) {
 
 template<typename data_t, typename weight_t>
 weight_t &diGraph_t::operator()(id_t id1, id_t id2) {
-    if (!findById(id1))
+    if (!findVertex(id1))
         throw std::out_of_range("Graph does not contain vertex");
     auto &edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
@@ -234,9 +236,22 @@ void diGraph_t::displayVertex(id_t id) {
 }
 
 template<typename data_t, typename weight_t>
-bool diGraph_t::findById(id_t id) {
+bool diGraph_t::findVertex(id_t id) {
     return this->vertexes.find(id) != this->vertexes.end();
 }
+
+template<typename data_t, typename weight_t>
+bool diGraph_t::findEdge(id_t id1, id_t id2) {
+    if (!findVertex(id1) || !findVertex(id2))
+        return false;
+    auto edges = this->vertexes[id1]->edges;
+    for (auto it = edges.begin(); it != edges.end(); ++it) {
+        if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2)
+            return true;
+    }
+    return false;
+}
+
 
 template<typename data_t, typename weight_t>
 void diGraph_t::display() {
