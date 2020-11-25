@@ -104,3 +104,6 @@ void dGraphMake(DirectedGraph<string, double> &tempGraph); // Adds the parsed da
 
 
 > **PD:** Puntos extras sobre Evaluación Continua si se implementa una GUI.
+### Compilación
+En Parser/parser.h, void Parser::readJSON(file json_file)
+cambiar la ruta de "../Parser/Data/"  (para CLion) a "./Parser/Data/" (para compilar desde terminal).
