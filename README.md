@@ -106,6 +106,8 @@ void dGraphMake(DirectedGraph<string, double> &tempGraph); // Adds the parsed da
 > **PD:** Puntos extras sobre Evaluación Continua si se implementa una GUI.
 ### Instrucciones para prueba
 * Parser
-** En el `main.cpp`, descomentar la sección `Tester::executeParser()` para probar el parseo de aeropuertos. En `Parser/parser.h`, `void Parser::readJSON(file json_file)`, cambiar la ruta de `"../Parser/Data/"`  (para CLion) a `"./Parser/Data/" (para compilar desde terminal)` de ser necesario.
+
+En el `main.cpp`, descomentar la sección `Tester::executeParser()` para probar el parseo de aeropuertos. En `Parser/parser.h`, `void Parser::readJSON(file json_file)`, cambiar la ruta de `"../Parser/Data/"`  (para CLion) a `"./Parser/Data/" (para compilar desde terminal)` de ser necesario.
 * Menú interactivo
-** En el `main.cpp`, descomentar la sección `Tester::executeExamples()`.
+
+En el `main.cpp`, descomentar la sección `Tester::executeExamples()`.
