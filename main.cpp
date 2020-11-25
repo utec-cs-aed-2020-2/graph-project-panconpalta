@@ -3,7 +3,7 @@
 #include "Tester/tester.h"
 
 int main() {
-    Tester::executeParser(file::airports);
+    //Tester::executeParser(file::airports);
     //Tester::executeExamples();
 
     return EXIT_SUCCESS;
