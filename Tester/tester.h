@@ -56,6 +56,8 @@ void Tester::executeParser(file json_file) {
     auto pResult = prim.apply();
     e1 = clock();
     performance.insert(std::make_pair("prim", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
+    //isConnected runs correctly, but takes time to test with airports.json
+    //If wanted, just uncomment this section
     /*s1 = clock();
     unDirectedGraph.isConnected();
     e1 = clock();
