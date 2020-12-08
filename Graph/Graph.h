@@ -3,11 +3,24 @@
 
 #include "utilityTypes.h"
 
+
+template<typename data_t, typename weight_t>
+class DFS;
+template<typename data_t, typename weight_t>
+class BFS;
+
 template<typename data_t, typename weight_t>
 class Graph {
 protected:
     umap<id_t, vertex_t *> vertexes;
     int totEdges = 0;
+
+private:
+    friend
+    class DFS<data_t,weight_t>;
+
+    friend
+    class BFS<data_t,weight_t>;
 
 public:
 

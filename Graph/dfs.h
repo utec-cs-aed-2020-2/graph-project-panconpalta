@@ -89,10 +89,10 @@ graph_t *DFS<data_t, weight_t>::Apply() {
         }
         for (auto &currentEdge: currentVertex->edges) {
             //cuz the graph is undirected it needs to check wich vertex follows the current in the current edge
-            if (currentVertex == currentEdge->vertexes[0]) {
-                nextVertex = currentEdge->vertexes[1];
+            if (*currentVertex == currentEdge->vertexes[0]) {
+                nextVertex = &currentEdge->vertexes[1];
             } else {
-                nextVertex = currentEdge->vertexes[0];
+                nextVertex = &currentEdge->vertexes[0];
             }
             //checking if the nodes of the edge are already conected
             if (VertexSets->Find(getIdOf(currentVertex)) == VertexSets->Find(getIdOf(nextVertex))) {

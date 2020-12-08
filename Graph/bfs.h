@@ -88,7 +88,7 @@ graph_t* BFS<data_t,weight_t>::Apply(){
 		Path.pop();
 		for(auto& currentEdge: currentVertex->edges){
 		//cuz the graph is undirected it needs to check wich vertex follows the current in the current edge
-			if(currentVertex==currentEdge->vertexs[0]){
+			if(*currentVertex==currentEdge->vertexs[0]){
 				nextVertex=currentEdge->vertexs[1];
 			}else{
 				nextVertex=currentEdge->vertexs[0];

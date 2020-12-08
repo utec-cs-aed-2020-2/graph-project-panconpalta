@@ -55,6 +55,9 @@ struct Vertex {
 
     Vertex() {}
 
+    bool operator==(vertex_t other){return this->id == other.id;}
+    bool operator==(vertex_t* other){return this->id == other->id;}
+
     void killSelf() {
         delete this;
     }
@@ -100,4 +103,7 @@ template<typename data_t, typename weight_t>
 id_t getIdOf(vertex_t &v) {
     return v.id;
 }
-
+template<typename data_t, typename weight_t>
+id_t getIdOf(vertex_t* &v) {
+    return v->id;
+}
