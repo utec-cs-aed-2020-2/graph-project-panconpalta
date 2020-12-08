@@ -1,8 +1,7 @@
 #ifndef GRAPH_PROJECT_PANCONPALTA_BFS_H
 #define GRAPH_PROJECT_PANCONPALTA_BFS_H
 
-#include "utilityTypes.h"
-
+#include "Graph.h"
 
 template<typename data_t, typename weight_t>
 class UnDirectedGraph;
