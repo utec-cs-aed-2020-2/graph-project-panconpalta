@@ -4,6 +4,7 @@
 #include <map>
 #include <unordered_set>
 #include <queue>
+#include <stack>
 #include <iostream>
 #include "dsarray.h"
 

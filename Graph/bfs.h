@@ -71,10 +71,10 @@ graph_t* BFS<data_t,weight_t>::Apply(){
 	graph_t* BFS=nullptr;
 	switch (type){
 	case graphtype::DIRECTEDGRAPH:
-		BFS = new UnDirectedGraph<data_t,weight_t>;
+		BFS = new DirectedGraph<data_t,weight_t>;
 		break;
 	default:
-		BFS = new DirectedGraph<data_t,weight_t>;
+		BFS = new UnDirectedGraph<data_t,weight_t>;
 		break;
 	}
 	//Executing the algorithm
