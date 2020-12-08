@@ -15,6 +15,11 @@ private:
     friend
     class Prim<data_t, weight_t>;
 
+    friend
+    class DFS<data_t,weight_t>;
+
+    friend
+    class BFS<data_t,weight_t>;
 public:
     UnDirectedGraph();
 
