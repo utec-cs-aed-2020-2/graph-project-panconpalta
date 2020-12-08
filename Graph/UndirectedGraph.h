@@ -15,6 +15,9 @@ private:
     friend
     class Prim<data_t, weight_t>;
 
+    friend
+    class FloydWarshall<data_t, weight_t>;
+
 public:
     UnDirectedGraph();
 
@@ -52,9 +55,6 @@ public:
 
     data_t operator[](id_t key);
 
-    //undiGraph_t execKruskal();
-
-    //undiGraph_t execPrim(id_t start);
 };
 
 template<typename data_t, typename weight_t>
@@ -289,100 +289,5 @@ void undiGraph_t::display() {
         std::cout << std::endl;
     }
 }
-
-/*
-template<typename data_t, typename weight_t>
-undiGraph_t undiGraph_t::execKruskal() {
-    undiGraph_t Kruskal;
-    std::vector<id_t> vs(this->vertexes.size());
-    Kqueue_t EdgesToCheck;
-    //Preparing for the algorithm
-    for (auto &it: this->vertexes) {
-        //making a copy of the graph without edges
-        Kruskal.insertVertex(it.first, it.second->data);
-        //adding the vertexes to the disjoin set
-        vs.push_back(it.first);
-        //adding the edges to the priority queue
-        for (auto &edgePtr: it.second->edges) {
-            //the edges are duplicated cuz the graph is undirected
-            EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
-        }
-    }
-    dset_t VertexSets(vs);
-    //Preparation done
-    //Executing the algorithm
-    edge_t *currentEdge = nullptr;
-    while (!EdgesToCheck.empty()) {
-        currentEdge = EdgesToCheck.top().second;
-        EdgesToCheck.pop();
-        //checking if the nodes of the edge are already conected
-        if (VertexSets.Find(getIdOf(currentEdge->vertexes[0])) == VertexSets.Find(getIdOf(currentEdge->vertexes[1])))
-            continue;
-        //else
-        VertexSets.Union(VertexSets.Find(getIdOf(currentEdge->vertexes[0])),
-                         VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
-        Kruskal.createEdge(getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight);
-    }
-    vs.clear();
-
-    return Kruskal;
-}
-
-template<typename data_t, typename weight_t>
-undiGraph_t undiGraph_t::execPrim(id_t start) {
-    if (!findVertex(start))
-        throw std::out_of_range("Graph does not contain vertex");
-    undiGraph_t Prim;
-    std::vector<id_t> vs;
-    uset<id_t> visited;
-    Pqueue_t EdgesToCheck;
-    vs.push_back(start);
-    Prim.insertVertex(start, this->vertexes[start]->data);
-    for (auto &edgePtr: this->vertexes[start]->edges) {
-        EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
-        edgePtr->vertexes[0].id != start ? vs.push_back(edgePtr->vertexes[0].id) : vs.push_back(
-                edgePtr->vertexes[1].id);
-    }
-    visited.insert(start);
-    edge_t *currentEdge = nullptr;
-    dset_t VertexSets(vs);
-
-    while (!EdgesToCheck.empty()) {
-        currentEdge = EdgesToCheck.top().second;
-        EdgesToCheck.pop();
-        //checking if the nodes of the edge are already conected
-        if (VertexSets.Find(getIdOf(currentEdge->vertexes[0])) == VertexSets.Find(getIdOf(currentEdge->vertexes[1])))
-            continue;
-        //else
-        VertexSets.Union(VertexSets.Find(getIdOf(currentEdge->vertexes[0])),
-                         VertexSets.Find(getIdOf(currentEdge->vertexes[1])));
-
-        if (Prim.vertexes.find(getIdOf(currentEdge->vertexes[0])) == Prim.vertexes.end())
-            Prim.insertVertex(getIdOf(currentEdge->vertexes[0]),
-                              this->vertexes[getIdOf(currentEdge->vertexes[0])]->data);
-        if (Prim.vertexes.find(getIdOf(currentEdge->vertexes[1])) == Prim.vertexes.end())
-            Prim.insertVertex(getIdOf(currentEdge->vertexes[1]),
-                              this->vertexes[getIdOf(currentEdge->vertexes[1])]->data);
-
-        Prim.createEdge(getIdOf(currentEdge->vertexes[0]), getIdOf(currentEdge->vertexes[1]), currentEdge->weight);
-
-        for (int i = 0; i < 2; ++i) {
-            auto current_v = currentEdge->vertexes[i].id;
-            if (visited.find(current_v) == visited.end()) {
-                for (auto &edgePtr: this->vertexes[current_v]->edges) {
-                    auto other_v =
-                            edgePtr->vertexes[0].id != current_v ? edgePtr->vertexes[0].id : edgePtr->vertexes[1].id;
-                    if (visited.find(other_v) == visited.end()) {
-                        EdgesToCheck.push(std::make_pair(edgePtr->weight, edgePtr));
-                        VertexSets.Add(other_v);
-                    }
-                }
-                visited.insert(current_v);
-            }
-        }
-    }
-    return Prim;
-}
-*/
 
 #endif

@@ -8,6 +8,9 @@
 
 template<typename data_t, typename weight_t>
 class DirectedGraph : public graph_t {
+private:
+    friend
+    class FloydWarshall<data_t, weight_t>;
 public:
     DirectedGraph();
 
