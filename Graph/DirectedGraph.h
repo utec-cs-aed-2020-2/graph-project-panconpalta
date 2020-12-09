@@ -10,13 +10,14 @@ template<typename data_t, typename weight_t>
 class DirectedGraph : public graph_t {
 private:
     friend
-    class DFS<data_t,weight_t>;
+    class DFS<data_t, weight_t>;
 
     friend
-    class BFS<data_t,weight_t>;
+    class BFS<data_t, weight_t>;
 
     friend
     class FloydWarshall<data_t, weight_t>;
+
 public:
     DirectedGraph();
 

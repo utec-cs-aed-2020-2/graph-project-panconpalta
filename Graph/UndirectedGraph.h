@@ -16,10 +16,10 @@ private:
     class Prim<data_t, weight_t>;
 
     friend
-    class DFS<data_t,weight_t>;
+    class DFS<data_t, weight_t>;
 
     friend
-    class BFS<data_t,weight_t>;
+    class BFS<data_t, weight_t>;
 
     friend
     class FloydWarshall<data_t, weight_t>;
