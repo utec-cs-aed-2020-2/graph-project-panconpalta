@@ -10,105 +10,124 @@ template<typename data_t, typename weight_t>
 class DirectedGraph;
 
 
-
 template<typename data_t, typename weight_t>
 class BFS {
 private:
-	enum graphtype{
-		UNDIRECTEDGRAPH=0, DIRECTEDGRAPH
-	};
+    enum graphType {
+        unDirected, directed
+    };
+    graphType type;
+    umap<id_t, vertex_t *> v;
+    std::vector<std::tuple<id_t, id_t, weight_t>> bfs;
 
-	graphtype type;
-    umap<id_t, vertex_t *> vertexes;
-    queue_t Path;
-	dset_t* VertexSets;
-
-	graph_t* Apply();
-	void prepareBFS();
 public:
-    ~BFS(){
-		delete VertexSets;
-    }
-	explicit BFS(UnDirectedGraph<data_t, weight_t> const &graph){
-		type= graphtype::UNDIRECTEDGRAPH;
-		vertexes= graph.vertexes;
-		prepareBFS();
-	}
+    explicit BFS(UnDirectedGraph<data_t, weight_t> &graph, id_t start);
 
-    explicit BFS(DirectedGraph<data_t, weight_t> const &graph){
-		type= graphtype::DIRECTEDGRAPH;
-		vertexes= graph.vertexes;
-		prepareBFS();
-	}
+    explicit BFS(DirectedGraph<data_t, weight_t> &graph, id_t start);
 
-	//need to: delete &returnedgraph;
-	UnDirectedGraph<data_t, weight_t> undiApply(){
-		return *(UnDirectedGraph<data_t, weight_t>*)(Apply());
-	}
-	DirectedGraph<data_t, weight_t> diApply(){
-		return *(DirectedGraph<data_t, weight_t>*)(Apply());
-	}
+    UnDirectedGraph<data_t, weight_t> unDirectedApply();
+
+    DirectedGraph<data_t, weight_t> directedApply();
+
+    ~BFS();
+
 
 };
 
 template<typename data_t, typename weight_t>
-void BFS<data_t,weight_t>::prepareBFS(){
-//Preparing for the algorithm
-std::vector<id_t> vs(vertexes.size());
-for(auto& it: vertexes){
-	//adding the vertexs to the disjoin set
-	vs.push_back(it.first);
-}
-VertexSets = new dset_t(vs);
-//setting the root of the tree
-Path.push(vertexes.begin()->second);
-//Preparation done
+BFS<data_t, weight_t>::BFS(UnDirectedGraph<data_t, weight_t> &graph, id_t start) {
+    if (graph.vertexes.find(start) == graph.vertexes.end())
+        throw std::out_of_range("Start Vertex Does Not Exist");
+    type = unDirected;
+    std::queue<id_t> nodes;
+    std::queue<std::pair<id_t, weight_t>> weight_prev;
+    std::unordered_set<id_t> visited;
+
+    nodes.push(graph.vertexes[start]->id);
+    std::pair<id_t, weight_t> front_weight;
+    id_t front, other;
+    while (!nodes.empty()) {
+        front = nodes.front();
+        v.insert({front, graph.vertexes[front]});
+        if (!weight_prev.empty()) {
+            front_weight = weight_prev.front();
+            weight_prev.pop();
+            bfs.push_back({front, front_weight.first, front_weight.second});
+        }
+        nodes.pop();
+
+        for (auto it = graph.vertexes[front]->edges.begin(); it != graph.vertexes[front]->edges.end(); ++it) {
+            other = (*it)->vertexes[0].id != front ? (*it)->vertexes[0].id : (*it)->vertexes[1].id;
+            if (visited.find(other) == visited.end()) {
+                visited.insert(other);
+                nodes.push(other);
+                weight_prev.push(std::make_pair(front, (*it)->weight));
+            }
+        }
+    }
 }
 
 template<typename data_t, typename weight_t>
-graph_t* BFS<data_t,weight_t>::Apply(){	
-	graph_t* BFS=nullptr;
-	switch (type){
-	case graphtype::DIRECTEDGRAPH:
-		BFS = new DirectedGraph<data_t,weight_t>;
-		break;
-	default:
-		BFS = new UnDirectedGraph<data_t,weight_t>;
-		break;
-	}
-	//Executing the algorithm
-	vertex_t* currentVertex=nullptr;
-	vertex_t* nextVertex=nullptr;
-	while(!Path.empty()){
-		currentVertex=Path.front();
-		//if current is a new vertex in BFS
-		if(BFS->vertexs.find(currentVertex->id)==BFS->vertexs.end()){
-			BFS->insertVertex(currentVertex->id,currentVertex->data);
-		}
-		Path.pop();
-		for(auto& currentEdge: currentVertex->edges){
-		//cuz the graph is undirected it needs to check wich vertex follows the current in the current edge
-			if(*currentVertex==currentEdge->vertexs[0]){
-				nextVertex=currentEdge->vertexs[1];
-			}else{
-				nextVertex=currentEdge->vertexs[0];
-			}
-		//checking if the nodes of the edge are already conected
-			if(VertexSets->Find(getIdOf(currentVertex)) == VertexSets->Find(getIdOf(nextVertex))){
-				continue;
-			}
-			//else
-			if(BFS->vertexs.find(nextVertex->id)==BFS->vertexs.end()){
-				BFS->insertVertex(nextVertex->id,nextVertex->data);
-			}
-			VertexSets->Union(VertexSets->Find(getIdOf(currentVertex)),
-								VertexSets->Find(getIdOf(nextVertex)));
-			BFS->createEdge(getIdOf(currentVertex),getIdOf(nextVertex),currentEdge->weight);
-			Path.push(nextVertex);
-		}
-	}
-	return BFS;
+BFS<data_t, weight_t>::BFS(DirectedGraph<data_t, weight_t> &graph, id_t start) {
+    if (graph.vertexes.find(start) == graph.vertexes.end())
+        throw std::out_of_range("Start Vertex Does Not Exist");
+    type = directed;
+    std::queue<id_t> nodes;
+    std::queue<std::pair<id_t, weight_t>> weight_prev;
+    std::unordered_set<id_t> visited;
+
+    nodes.push(graph.vertexes[start]->id);
+    std::pair<id_t, weight_t> front_weight;
+    id_t front, other;
+    while (!nodes.empty()) {
+        front = nodes.front();
+        v.insert({front, graph.vertexes[front]});
+        if (!weight_prev.empty()) {
+            front_weight = weight_prev.front();
+            weight_prev.pop();
+            bfs.push_back({front_weight.first, front, front_weight.second});
+        }
+        nodes.pop();
+
+        for (auto it = graph.vertexes[front]->edges.begin(); it != graph.vertexes[front]->edges.end(); ++it) {
+            other = (*it)->vertexes[0].id != front ? (*it)->vertexes[0].id : (*it)->vertexes[1].id;
+            if (visited.find(other) == visited.end()) {
+                visited.insert(other);
+                nodes.push(other);
+                weight_prev.push(std::make_pair(front, (*it)->weight));
+            }
+        }
+    }
 }
 
+template<typename data_t, typename weight_t>
+BFS<data_t, weight_t>::~BFS() {
+    v.clear();
+    bfs.clear();
+}
+
+template<typename data_t, typename weight_t>
+UnDirectedGraph<data_t, weight_t> BFS<data_t, weight_t>::unDirectedApply() {
+    if (type != unDirected)
+        throw std::invalid_argument("Invalid Graph Type");
+    UnDirectedGraph<data_t, weight_t> tree;
+    for (auto &it : v)
+        tree.insertVertex(it.first, it.second->data);
+    for (auto &it : bfs)
+        tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
+    return tree;
+}
+
+template<typename data_t, typename weight_t>
+DirectedGraph<data_t, weight_t> BFS<data_t, weight_t>::directedApply() {
+    if (type != directed)
+        throw std::invalid_argument("Invalid Graph Type");
+    DirectedGraph<data_t, weight_t> tree;
+    for (auto &it : v)
+        tree.insertVertex(it.first, it.second->data);
+    for (auto &it : bfs)
+        tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
+    return tree;
+}
 
 #endif //GRAPH_PROJECT_PANCONPALTA_BFS_H
