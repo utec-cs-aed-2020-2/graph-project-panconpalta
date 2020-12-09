@@ -3,8 +3,6 @@
 
 #include "Graph.h"
 
-#define inf 999
-
 template<typename data_t, typename weight_t>
 class UnDirectedGraph;
 
