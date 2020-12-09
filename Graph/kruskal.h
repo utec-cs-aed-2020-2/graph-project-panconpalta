@@ -54,12 +54,10 @@ Kruskal<data_t, weight_t>::~Kruskal() {
 template<typename data_t, typename weight_t>
 UnDirectedGraph<data_t, weight_t> Kruskal<data_t, weight_t>::apply() {
     UnDirectedGraph<data_t, weight_t> tree;
-    for (auto &it : v) {
+    for (auto &it : v)
         tree.insertVertex(it.first, it.second->data);
-    }
-    for (auto &it : kruskal) {
+    for (auto &it : kruskal)
         tree.createEdge(std::get<0>(it), std::get<1>(it), std::get<2>(it));
-    }
     return tree;
 }
 
