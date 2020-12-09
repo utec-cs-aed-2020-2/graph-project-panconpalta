@@ -18,6 +18,9 @@ private:
     friend
     class FloydWarshall<data_t, weight_t>;
 
+    friend
+    class BellmanFord<data_t, weight_t>;
+
 public:
     DirectedGraph();
 

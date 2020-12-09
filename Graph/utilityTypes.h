@@ -30,6 +30,7 @@ class Graph;
 #define Pqueue_t std::priority_queue<Ppair_t, std::vector<Ppair_t>, std::greater<Ppair_t>>
 #define stack_t std::stack<vertex_t*>
 #define queue_t std::queue<vertex_t*>
+#define inf 999
 
 /////////////structures//////////////////////////
 template<typename data_t, typename weight_t>
