@@ -8,7 +8,7 @@
 int main() {
     //Tester::executeParser(file::airports);
     //Tester::executeExamples();
-    UnDirectedGraph<int, int> graph;
+    DirectedGraph<int, int> graph;
     graph.insertVertex("A", 1);
     graph.insertVertex("B", 2);
     graph.insertVertex("C", 3);
@@ -19,10 +19,11 @@ int main() {
     graph.createEdge("C", "B", 6);
     graph.createEdge("C", "E", 5);
     graph.createEdge("B", "E", 4);
-    graph.createEdge("D", "E", 3);
+    graph.createEdge("E", "D", 3);
     graph.display();
-
-    auto dfs = DFS<int, int>(graph);
-    dfs.undiApply().display();
+    std::cout << "\n";
+    auto bfs = BFS<int, int>(graph, "C");
+    auto ans = bfs.directedApply();
+    ans.display();
     return EXIT_SUCCESS;
 }
