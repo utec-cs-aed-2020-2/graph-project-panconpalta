@@ -3,6 +3,7 @@
 #include "Graph/bfs.h"
 #include "Graph/dfs.h"
 #include "Graph/FloydWarshall.h"
+#include "Graph/BellmanFord.h"
 #include "Tester/tester.h"
 
 int main() {
@@ -22,8 +23,7 @@ int main() {
     graph.createEdge("E", "D", 3);
     graph.display();
     std::cout << "\n";
-    auto bfs = BFS<int, int>(graph, "C");
-    auto ans = bfs.directedApply();
-    ans.display();
+    auto bellman = BellmanFord<int, int>(graph, "A");
+    bellman.displayDistances();
     return EXIT_SUCCESS;
 }
