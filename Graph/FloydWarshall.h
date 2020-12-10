@@ -183,9 +183,8 @@ void FloydWarshall<data_t, weight_t>::showPath(std::string a, std::string b) {
         a = nodes[idt_pos[a]][idt_pos[b]];
         path.push_back(a);
     }
-    for (int i = 0; i < path.size() - 1; ++i) {
+    for (int i = 0; i < path.size() - 1; ++i)
         std::cout << "[" << path[i] << "] -- (" << distance[idt_pos[path[i]]][idt_pos[path[i + 1]]] << ") --> ";
-    }
     std::cout << "[" << path[path.size() - 1] << "]\n";
 }
 
