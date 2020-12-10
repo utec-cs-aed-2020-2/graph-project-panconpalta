@@ -26,20 +26,22 @@ public:
 
     void displayDistances();
 
+    void showPath(id_t a);
+
 };
 
 template<typename data_t, typename weight_t>
 BellmanFord<data_t, weight_t>::BellmanFord(const UnDirectedGraph<data_t, weight_t> &graph, id_t start) {
-    this->start = start;
-    if (graph.vertexes.find(start) == graph.vertexes.end())
+    if (graph.vertexes.find(start) == graph.vertexes.end()) {
         throw std::out_of_range("Start Vertex Does Not Exist");
+    }
+    this->start = start;
 
     for (auto &it : graph.vertexes) {
         nodes.insert({it.first, id_t()});
         distances.insert({it.first, inf});
     }
     distances[start] = 0;
-    int n = graph.vertexes.size();
     for (int i = 0; i < graph.vertexes.size() - 1; i++) {
         for (auto &it : graph.vertexes) {
             for (auto it2 : it.second->edges) {
@@ -67,16 +69,16 @@ BellmanFord<data_t, weight_t>::BellmanFord(const UnDirectedGraph<data_t, weight_
 
 template<typename data_t, typename weight_t>
 BellmanFord<data_t, weight_t>::BellmanFord(const DirectedGraph<data_t, weight_t> &graph, std::string start) {
-    this->start = start;
-    if (graph.vertexes.find(start) == graph.vertexes.end())
+    if (graph.vertexes.find(start) == graph.vertexes.end()) {
         throw std::out_of_range("Start Vertex Does Not Exist");
+    }
+    this->start = start;
 
     for (auto &it : graph.vertexes) {
         nodes.insert({it.first, id_t()});
         distances.insert({it.first, inf});
     }
     distances[start] = 0;
-    int n = graph.vertexes.size();
     for (int i = 0; i < graph.vertexes.size() - 1; i++) {
         for (auto &it : graph.vertexes) {
             for (auto it2 : it.second->edges) {
@@ -113,6 +115,27 @@ void BellmanFord<data_t, weight_t>::displayDistances() {
     std::cout << "Distances From " << start << "\n";
     for (auto &it : distances)
         std::cout << it.first << ":\t" << it.second << "\n";
+}
+
+template<typename data_t, typename weight_t>
+void BellmanFord<data_t, weight_t>::showPath(std::string a) {
+    if (distances.find(a) == distances.end())
+        throw std::out_of_range("Vertex Does Not Exist");
+    if (distances[a] == inf) {
+        std::cout << "Impossible to reach " << a << " from " << start << "\n";
+        return;
+    }
+    std::vector<id_t> path;
+    path.push_back(a);
+    std::cout << "Path From " << start << " to " << a << "\n";
+    auto s = a;
+    while (s != start) {
+        path.push_back(nodes[s]);
+        s = nodes[s];
+    }
+    for (int i = path.size() - 1; i >= 1; i--)
+        std::cout << "[" << path[i] << "] -- (" << distances[path[i - 1]] - distances[path[i]] << ") --> ";
+    std::cout << "[" << path[0] << "]\n";
 }
 
 
