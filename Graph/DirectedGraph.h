@@ -21,6 +21,9 @@ private:
     friend
     class BellmanFord<data_t, weight_t>;
 
+    friend
+    class SCC<data_t, weight_t>;
+
 public:
     DirectedGraph();
 
