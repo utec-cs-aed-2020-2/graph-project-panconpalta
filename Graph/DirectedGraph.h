@@ -24,6 +24,9 @@ private:
     friend
     class SCC<data_t, weight_t>;
 
+    friend
+    class Dijkstra<data_t, weight_t>;
+
 public:
     DirectedGraph();
 

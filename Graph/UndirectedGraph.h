@@ -27,6 +27,9 @@ private:
     friend
     class BellmanFord<data_t, weight_t>;
 
+    friend
+    class Dijkstra<data_t, weight_t>;
+
 public:
     UnDirectedGraph();
 
