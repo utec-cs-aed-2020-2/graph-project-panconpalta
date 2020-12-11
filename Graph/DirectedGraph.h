@@ -173,15 +173,13 @@ bool diGraph_t::isDense(float threshold) {
 
 template<typename data_t, typename weight_t>
 bool diGraph_t::isConnected() {
-    umap<id_t, bool> visited;
+    uset<id_t> visited;
     for (auto it: this->vertexes) {
-        visit(visited, this->vertexes, it.first);
-        if (visited.size() == this->vertexes.size()) {
-            return true;
-        }
-        visited.clear();
+        traverse(visited, this->vertexes, it.first);
+        if (visited.size() != this->vertexes.size())
+            return false;
     }
-    return false;
+    return true;
 }
 
 template<typename data_t, typename weight_t>
@@ -189,9 +187,8 @@ bool diGraph_t::isStronglyConnected() {
     umap<id_t, bool> visited;
     for (auto it: this->vertexes) {
         visit(visited, this->vertexes, it.first);
-        if (visited.size() != this->vertexes.size()) {
+        if (visited.size() != this->vertexes.size())
             return false;
-        }
         visited.clear();
     }
     return true;

@@ -56,8 +56,9 @@ struct Vertex {
 
     Vertex() {}
 
-    bool operator==(vertex_t other){return this->id == other.id;}
-    bool operator==(vertex_t* other){return this->id == other->id;}
+    bool operator==(vertex_t other) { return this->id == other.id; }
+
+    bool operator==(vertex_t *other) { return this->id == other->id; }
 
     void killSelf() {
         delete this;
@@ -95,8 +96,24 @@ template<typename data_t, typename weight_t>
 void visit(umap<id_t, bool> &visited, umap<id_t, vertex_t *> &vertexes, id_t id) {
     visited[id] = true;
     for (auto it = vertexes[id]->edges.begin(); it != vertexes[id]->edges.end(); it++) {
-        if (visited[(*it)->vertexes[1].id] == false)
-            visit(visited, vertexes, (*it)->vertexes[1].id);
+        auto other = (*it)->vertexes[0].id != id ? (*it)->vertexes[0].id : (*it)->vertexes[1].id;
+        if (visited.find(other) == visited.end())
+            visit(visited, vertexes, other);
+    }
+}
+
+template<typename data_t, typename weight_t>
+void traverse(uset<id_t> &visited, umap<id_t, vertex_t *> &vertexes, id_t id) {
+    //visited[id] = true;
+    visited.insert(id);
+    for (auto &it : vertexes) {
+        for (auto it2 = vertexes[it.first]->edges.begin(); it2 != vertexes[it.first]->edges.end(); it2++) {
+            auto other = (*it2)->vertexes[0].id != it.first ? (*it2)->vertexes[0].id : (*it2)->vertexes[1].id;
+            if (other == id) {
+                if (visited.find(it.first) == visited.end())
+                    traverse(visited, vertexes, it.first);
+            }
+        }
     }
 }
 
@@ -104,7 +121,8 @@ template<typename data_t, typename weight_t>
 id_t getIdOf(vertex_t &v) {
     return v.id;
 }
+
 template<typename data_t, typename weight_t>
-id_t getIdOf(vertex_t* &v) {
+id_t getIdOf(vertex_t *&v) {
     return v->id;
 }
