@@ -79,6 +79,7 @@ void Parser::uGraphMake(UnDirectedGraph<Airport, double> &graph) {
                                     graph[dest.GetString()].longitude, 2)
                         )
                 );
+                //certain airport codes are invalid
             } catch (...) {
                 continue;
             }
