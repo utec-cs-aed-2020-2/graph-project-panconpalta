@@ -44,6 +44,8 @@ public:
     virtual void clear() = 0;
 
     virtual void display() = 0;
+
+    virtual void displayTop() = 0;
 };
 
 #endif

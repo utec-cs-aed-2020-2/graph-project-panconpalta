@@ -6,7 +6,7 @@
 #include <queue>
 #include <stack>
 #include <iostream>
-#include "dsarray.h"
+#include "Algorithms/dsarray.h"
 
 template<typename data_t, typename weight_t>
 struct Edge;

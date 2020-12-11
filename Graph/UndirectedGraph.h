@@ -65,6 +65,8 @@ public:
 
     void display() override;
 
+    void displayTop() override;
+
     data_t operator[](id_t key);
 
 };
@@ -296,10 +298,35 @@ void undiGraph_t::display() {
             auto val = (*it2)->vertexes[0].id;
             if ((*it2)->vertexes[0].id == it->second->id)
                 val = (*it2)->vertexes[1].id;
-            std::cout << val << '(' << (*it2)->weight << ')' << ", ";
+            std::cout << val << '(' << (*it2)->weight << ')';
+            if (*it2 != *it->second->edges.rbegin())
+                std::cout << ", ";
         }
         std::cout << std::endl;
     }
 }
+
+template<typename data_t, typename weight_t>
+void undiGraph_t::displayTop() {
+    int k = 5;
+    for (auto it = this->vertexes.begin(); it != this->vertexes.end(); ++it) {
+        if (!k)
+            break;
+        if (it->second->edges.size() <= 5) {
+            std::cout << it->second->id << ": ";
+            for (auto it2 = it->second->edges.begin(); it2 != it->second->edges.end(); ++it2) {
+                auto val = (*it2)->vertexes[0].id;
+                if ((*it2)->vertexes[0].id == it->second->id)
+                    val = (*it2)->vertexes[1].id;
+                std::cout << val << '(' << (*it2)->weight << ')';
+                if (*it2 != *it->second->edges.rbegin())
+                    std::cout << ", ";
+            }
+            std::cout << std::endl;
+            k--;
+        }
+    }
+}
+
 
 #endif

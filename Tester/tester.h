@@ -36,58 +36,94 @@ void Tester::executeParser(file json_file) {
     parser.readJSON(json_file);
     UnDirectedGraph<Airport, double> unDirectedGraph;
     DirectedGraph<Airport, double> DirectedGraph;
-    umap<std::string, std::pair<double, double>> performance;
+    std::vector<std::tuple<std::string, double, double>> performance;
     clock_t s1, s2, e1, e2;
+    //parse data - build graph
     s1 = clock();
     parser.uGraphMake(unDirectedGraph);
     e1 = clock();
     s2 = clock();
     parser.dGraphMake(DirectedGraph);
     e2 = clock();
-    performance.insert(std::make_pair("buildGraph", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC),
-                                                                   double(e2 - s2) / double(CLOCKS_PER_SEC))));
+    performance.push_back(std::make_tuple("buildGraph", double(e1 - s1) / double(CLOCKS_PER_SEC),
+                                          double(e2 - s2) / double(CLOCKS_PER_SEC)));
+
+    std::cout << "================================================" << std::endl;
+    std::cout << "TOP DISPLAY - PARSER " << parser.getPath() << ".json" << std::endl;
+    std::cout << "================================================" << std::endl;
+    std::cout << "\nunDirected:\n";
+    unDirectedGraph.displayTop();
+    std::cout << "\ndirected:\n";
+    DirectedGraph.displayTop();
+    std::cout << "\n";
+    // kruskal
     s1 = clock();
     Kruskal<Airport, double> kruskal(unDirectedGraph);
     auto kResult = kruskal.apply();
     e1 = clock();
-    performance.insert(std::make_pair("kruskal", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
+    performance.push_back(std::make_tuple("kruskal", double(e1 - s1) / double(CLOCKS_PER_SEC), -1));
+
+    //prim from lima - 2789
     s1 = clock();
     Prim<Airport, double> prim(unDirectedGraph, "2789");
     auto pResult = prim.apply();
     e1 = clock();
-    performance.insert(std::make_pair("prim", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC), -1)));
-    //isConnected runs correctly, but takes time to test with airports.json
-    //If wanted, just uncomment this section
-    /*s1 = clock();
-    unDirectedGraph.isConnected();
-    e1 = clock();
-    s2 = clock();
-    DirectedGraph.isConnected();
-    e2 = clock();
-    performance.insert(std::make_pair("isConnected", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC),
-                                                                    double(e2 - s2) / double(CLOCKS_PER_SEC))));
-    */
+    performance.push_back(std::make_tuple("prim (lima)", double(e1 - s1) / double(CLOCKS_PER_SEC), -1));
+
+    //isStronglyConnected
     s2 = clock();
     DirectedGraph.isStronglyConnected();
     e2 = clock();
-    performance.insert(std::make_pair("isStronglyConnected", std::make_pair(-1,
-                                                                            double(e2 - s2) / double(CLOCKS_PER_SEC))));
+    performance.push_back(std::make_tuple("isStronglyConnected", -1,
+                                          double(e2 - s2) / double(CLOCKS_PER_SEC)));
+    //bfs from lima - 2789
+    s1 = clock();
+    BFS<Airport, double> bfs1(unDirectedGraph, "2789");
+    auto bfs1Result = bfs1.unDirectedApply();
+    e1 = clock();
+    s2 = clock();
+    BFS<Airport, double> bfs2(DirectedGraph, "2789");
+    auto bfs2Result = bfs2.directedApply();
+    e2 = clock();
+    performance.push_back(std::make_tuple("bfs (lima)", double(e1 - s1) / double(CLOCKS_PER_SEC),
+                                          double(e2 - s2) / double(CLOCKS_PER_SEC)));
+    //dfs from lima - 2789
+    s1 = clock();
+    DFS<Airport, double> dfs1(unDirectedGraph, "2789");
+    auto dfs1Result = dfs1.unDirectedApply();
+    e1 = clock();
+    s2 = clock();
+    DFS<Airport, double> dfs2(DirectedGraph, "2789");
+    auto dfs2Result = dfs2.directedApply();
+    e2 = clock();
+    performance.push_back(std::make_tuple("dfs (lima)", double(e1 - s1) / double(CLOCKS_PER_SEC),
+                                          double(e2 - s2) / double(CLOCKS_PER_SEC)));
+
+    //strongly connected components
+    s2 = clock();
+    SCC<Airport, double> scc(DirectedGraph);
+    e2 = clock();
+    performance.push_back(std::make_tuple("strongly connected components", -1,
+                                          double(e2 - s2) /
+                                          double(CLOCKS_PER_SEC)));
+    //clear
     s1 = clock();
     unDirectedGraph.clear();
     e1 = clock();
     s2 = clock();
     DirectedGraph.clear();
     e2 = clock();
-    performance.insert(std::make_pair("clear", std::make_pair(double(e1 - s1) / double(CLOCKS_PER_SEC),
-                                                              double(e2 - s2) / double(CLOCKS_PER_SEC))));
+    performance.push_back(std::make_tuple("clear", double(e1 - s1) / double(CLOCKS_PER_SEC),
+                                          double(e2 - s2) / double(CLOCKS_PER_SEC)));
+
     std::cout << "================================================" << std::endl;
     std::cout << "TIME PERFORMANCE - PARSER " << parser.getPath() << ".json" << std::endl;
     std::cout << "================================================" << std::endl;
 
     std::cout << "\nmethod\t\t\tunDirected\tdirected\n";
-    for (auto it = performance.begin(); it != performance.end(); ++it) {
-        std::cout << it->first << "\n";
-        std::cout << "\t\t\t" << it->second.first << " s\t\t" << it->second.second << " s\n";
+    for (auto i = 0; i != performance.size(); ++i) {
+        std::cout << std::get<0>(performance[i]) << "\n";
+        std::cout << "\t\t\t" << std::get<1>(performance[i]) << " s\t\t" << std::get<2>(performance[i]) << " s\n";
     }
 
 }
