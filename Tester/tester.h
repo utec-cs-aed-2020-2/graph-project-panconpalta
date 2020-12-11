@@ -116,7 +116,7 @@ void Tester::unDirectedExample() {
         std::cin >> input;
         if (input == 0)
             break;
-        if (input > 14)
+        if (input > 15)
             continue;
         unDirectedSwitch(graph, input);
     }
@@ -307,7 +307,7 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             break;
         }
         case 15: {
-            std::cout << "10. Clear\n";
+            std::cout << "15. Clear\n";
             graph.clear();
             std::cout << "Graph cleared!\n\n";
             break;
@@ -320,11 +320,11 @@ void Tester::directedExample() {
     int input = 1;
     while (input != 0) {
         std::cout
-                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Connected\n7. Density \t8. Clear\t9. Strongly Connected\n10. BFS\t\t11. DFS\t\t12. Dijkstra\n13. Bellman\t14. Floyd\n0. Finish\nChoose:";
+                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Connected\n7. Density \t8. Clear\t9. Strongly Connected\n10. BFS\t\t11. DFS\t\t12. Dijkstra\n13. Bellman\t14. Floyd\t15. Strongly Connected Components\n0. Finish\nChoose:";
         std::cin >> input;
         if (input == 0)
             break;
-        if (input > 14)
+        if (input > 15)
             continue;
         directedSwitch(graph, input);
     }
@@ -502,6 +502,14 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             FloydWarshall<data_type, weight_type> floyd(graph);
             floyd.displayDistances();
             floyd.displayPaths();
+            std::cout << "\n";
+            break;
+        }
+        case 15: {
+            std::cout << "15. Strongly Connected Components\n";
+            SCC<data_type, weight_type> scc(graph);
+            scc.displayComponents();
+            scc.apply().display();
             std::cout << "\n";
             break;
         }
