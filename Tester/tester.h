@@ -320,11 +320,11 @@ void Tester::directedExample() {
     int input = 1;
     while (input != 0) {
         std::cout
-                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Connected\n7. Density \t8. Clear\t9. Strongly Connected\n0. Finish\nChoose:";
+                << "Options\n1. Add Vertex\t2. Add Edge\t3. Delete Vertex\n4. Delete Edge\t5. Display\t6. Connected\n7. Density \t8. Clear\t9. Strongly Connected\n10. BFS\t\t11. DFS\t\t12. Dijkstra\n13. Bellman\t14. Floyd\n0. Finish\nChoose:";
         std::cin >> input;
         if (input == 0)
             break;
-        if (input > 10)
+        if (input > 14)
             continue;
         directedSwitch(graph, input);
     }
@@ -435,6 +435,74 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
         case 9: {
             std::cout << "9. isStronglyConnected\n";
             std::cout << std::boolalpha << graph.isStronglyConnected() << "\n\n";
+            break;
+        }
+        case 10: {
+            std::cout << "10. BFS\n";
+            id_t input;
+            std::cout << "Choose start vertex:";
+            std::cin >> input;
+            try {
+                BFS<data_type, weight_type> bfs(graph, input);
+                bfs.directedApply().display();
+            }
+            catch (std::out_of_range) {
+                std::cout << "Vertex does not exist!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 11: {
+            std::cout << "11. DFS\n";
+            id_t input;
+            std::cout << "Choose start vertex:";
+            std::cin >> input;
+            try {
+                DFS<data_type, weight_type> dfs(graph, input);
+                dfs.directedApply().display();
+            }
+            catch (std::out_of_range) {
+                std::cout << "Vertex does not exist!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 12: {
+            std::cout << "12. Dijkstra\n";
+            id_t input;
+            std::cout << "Choose start vertex:";
+            std::cin >> input;
+            try {
+                Dijkstra<data_type, weight_type> dijkstra(graph, input);
+                dijkstra.displayDistances();
+            }
+            catch (std::out_of_range) {
+                std::cout << "Vertex does not exist!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 13: {
+            std::cout << "13. Bellman Ford\n";
+            id_t input;
+            std::cout << "Choose start vertex:";
+            std::cin >> input;
+            try {
+                BellmanFord<data_type, weight_type> bellman(graph, input);
+                bellman.displayDistances();
+            }
+            catch (std::out_of_range) {
+                std::cout << "Vertex does not exist!\n";
+            }
+            std::cout << "\n";
+            break;
+        }
+        case 14: {
+            std::cout << "14. Floyd Warshall\n";
+            FloydWarshall<data_type, weight_type> floyd(graph);
+            floyd.displayDistances();
+            floyd.displayPaths();
+            std::cout << "\n";
             break;
         }
     }
