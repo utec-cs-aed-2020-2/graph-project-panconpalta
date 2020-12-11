@@ -85,7 +85,8 @@ BFS<data_t, weight_t>::BFS(DirectedGraph<data_t, weight_t> &graph, id_t start) {
         if (!weight_prev.empty()) {
             front_weight = weight_prev.front();
             weight_prev.pop();
-            bfs.push_back({front_weight.first, front, front_weight.second});
+            if(front != start)
+                bfs.push_back({front_weight.first, front, front_weight.second});
         }
         nodes.pop();
 
