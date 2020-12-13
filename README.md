@@ -3,9 +3,9 @@
 --------
 
 ## Integrantes
-- Anthony Aguilar 
-- Juan Pablo Lozada
-- Joaquin Ramirez
+- [Anthony Aguilar](https://github.com/warleon)
+- [Juan Pablo Lozada](https://github.com/IWeseI)
+- [Joaquin Ramirez](https://github.com/lordjuacs)
 
 ----
 
