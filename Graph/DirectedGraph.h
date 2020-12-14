@@ -27,6 +27,9 @@ private:
     friend
     class Dijkstra<data_t, weight_t>;
 
+    friend
+    class Astar<data_t, weight_t>;
+
 public:
     DirectedGraph();
 
@@ -95,7 +98,7 @@ template<typename data_t, typename weight_t>
 bool diGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
     if (id1 == id2)
         return false;
-    if (!findVertex(id1))
+    if (!findVertex(id1) || !findVertex(id2))
         return false;
     auto edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {

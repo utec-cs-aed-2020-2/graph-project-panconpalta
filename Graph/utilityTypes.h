@@ -18,6 +18,7 @@ class Graph;
 
 /////////////define types////////////////////////
 #define umap std::unordered_map
+#define map std::map
 #define uset std::unordered_set
 #define id_t std::string
 #define vertex_t Vertex<data_t, weight_t>
@@ -126,3 +127,21 @@ template<typename data_t, typename weight_t>
 id_t getIdOf(vertex_t *&v) {
     return v->id;
 }
+//copied from stackoverflow: https://stackoverflow.com/questions/16749723/how-i-can-find-value-in-priority-queue/16749994 
+//used for Astar
+template<class T,class Container = std::vector<T>,class Compare = std::less<typename Container::value_type>>
+class MyQueue : public std::priority_queue<T, Container, Compare>{
+public:
+    typedef typename
+        std::priority_queue<T,Container,Compare>::container_type::const_iterator const_iterator;
+
+    const_iterator find(const T&val) const{
+        auto first = this->c.cbegin();
+        auto last = this->c.cend();
+        while (first!=last) {
+            if (*first==val) return first;
+            ++first;
+        }
+        return last;
+    }
+};

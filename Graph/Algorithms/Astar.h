@@ -1,0 +1,161 @@
+#pragma once
+#include "../utilityTypes.h"
+#include <limits>
+
+#define INFINITY std::numeric_limits<int>::max
+#define AsPair std::pair<int,vertex_t*>
+#define openset_t MyQueue<AsPair,std::vector<AsPair>,std::greater<AsPair>>
+
+template<typename data_t, typename weight_t>
+class UnDirectedGraph;
+
+template<typename data_t, typename weight_t>
+class DirectedGraph;
+
+template<typename data_t, typename weight_t>
+class Astar{
+    map<id_t,int> gScore,fScore;
+    int(*h)(vertex_t,vertex_t)=nullptr;
+    int(*d)(vertex_t,vertex_t)=nullptr;
+    umap<id_t, vertex_t*> vertexs;
+    map<id_t,id_t> cameFrom;
+    //bool undirected;
+    openset_t openSet;
+
+    void resetSets();
+
+    UnDirectedGraph<data_t,weight_t> UnDiConstruct(id_t);
+    DirectedGraph<data_t,weight_t> DiConstruct(id_t);
+public:
+    explicit Astar(UnDirectedGraph<data_t, weight_t> &, int(*)(vertex_t,vertex_t),int(*)(vertex_t,vertex_t));
+    explicit Astar(DirectedGraph<data_t, weight_t> &, int(*)(vertex_t,vertex_t),int(*)(vertex_t,vertex_t));
+
+    
+    UnDirectedGraph<data_t,weight_t> UnDirectedApply(id_t,id_t);
+    DirectedGraph<data_t,weight_t> DirectedApply(id_t,id_t);
+
+    ~Astar();
+     
+};
+template<typename data_t, typename weight_t>
+Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, int(*hfunc)(vertex_t,vertex_t),int(*dfunc)(vertex_t,vertex_t)):h(hfunc),d(dfunc){
+    for(const auto& it:graph.vertexes){
+        vertexs[it.first]=it.second;
+    }
+}
+template<typename data_t, typename weight_t>
+Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, int(*hfunc)(vertex_t,vertex_t),int(*dfunc)(vertex_t,vertex_t)):h(hfunc),d(dfunc){
+    for(const auto& it:graph.vertexes){
+        vertexs[it.first]=it.second;
+    }
+}
+template<typename data_t, typename weight_t>
+UnDirectedGraph<data_t,weight_t> Astar<data_t, weight_t>::UnDirectedApply(id_t a,id_t b){
+    resetSets();
+    gScore[a]=0;
+    fScore[a]=h(*vertexs[a],*vertexs[b]);
+    openSet.push(std::make_pair(fScore[a],vertexs[a]));
+    vertex_t* current = nullptr;
+    vertex_t* neighbor = nullptr;
+    int newGScore=INFINITY;
+
+    while(!openSet.empty()){
+        current = openSet.top().second;
+        openSet.pop();
+
+        if(current->id == b) return UnDiConstruct(b);
+
+        //check for al the neighbors and evaluate them
+        for(const auto& edge:current->edges){
+            //just getting the neighbor
+            neighbor= &(edge[0]);
+            if(current->id == neighbor->id) neighbor=&(edge[1]);
+            //gotten
+
+            newGScore= gScore[current->id] + d(*current,*neighbor);
+            //if the the new gscore is better then add it 
+            if(newGScore<gScore[neighbor->id]){
+                cameFrom[neighbor->id]=current->id;
+                gScore[neighbor->id]=newGScore;
+                fScore[neighbor->id]=gScore[neighbor->id]+h(*current,*neighbor);
+                //if the neighbor isn´t in the open set then add it
+                if(openSet.find(std::make_pair(fScore[neighbor->id],vertexs[neighbor->id])) == openSet.end())
+                    openSet.push(std::make_pair(fScore[neighbor->id],vertexs[neighbor->id];
+            }
+        }
+    }
+    //if b is not reachable
+    return UnDirectedGraph<data_t,weight_t>;
+}
+template<typename data_t, typename weight_t>
+DirectedGraph<data_t,weight_t> Astar<data_t, weight_t>::DirectedApply(id_t a,id_t b){
+    resetSets();
+    gScore[a]=0;
+    fScore[a]=h(*vertexs[a],*vertexs[b]);
+    openSet.push(std::make_pair(fScore[a],vertexs[a]));
+    vertex_t* current = nullptr;
+    vertex_t* neighbor = nullptr;
+    int newGScore=INFINITY;
+
+    while(!openSet.empty()){
+        current = openSet.top().second;
+        openSet.pop();
+
+        if(current->id == b) return DiConstruct(b);
+
+        //check for al the neighbors and evaluate them
+        for(const auto& edge:current->edges){
+            //just getting the neighbor
+            neighbor= &(edge[0]);
+            if(current->id == neighbor->id) neighbor=&(edge[1]);
+            //gotten
+
+            newGScore= gScore[current->id] + d(*current,*neighbor);
+            //if the the new gscore is better then add it 
+            if(newGScore<gScore[neighbor->id]){
+                cameFrom[neighbor->id]=current->id;
+                gScore[neighbor->id]=newGScore;
+                fScore[neighbor->id]=gScore[neighbor->id]+h(*current,*neighbor);
+                //if the neighbor isn´t in the open set then add it
+                if(openSet.find(std::make_pair(fScore[neighbor->id],vertexs[neighbor->id])) == openSet.end())
+                    openSet.push(std::make_pair(fScore[neighbor->id],vertexs[neighbor->id];
+            }
+        }
+    }
+    //if b is not reachable
+    return DirectedGraph<data_t,weight_t>;
+}
+template<typename data_t, typename weight_t>
+UnDirectedGraph<data_t,weight_t> Astar<data_t,weight_t>::UnDiConstruct(id_t current){
+    UnDirectedGraph<data_t,weight_t> result;
+    id_t next;
+    result.insertVertex(current, vertexs[current]->data);
+    while(vertexs.find(current)!=vertexs.end()){//while current has a predecesor
+        next=current;
+        current=cameFrom[current];
+        result.insertVertex(current, vertexs[current]->data);
+        result.createEdge(current,next,d(*vertexs[current],*vertexs[next]));
+    }
+    return result;
+}
+template<typename data_t, typename weight_t>
+DirectedGraph<data_t,weight_t> Astar<data_t,weight_t>::DiConstruct(id_t){
+    DirectedGraph<data_t,weight_t> result;
+    id_t next;
+    result.insertVertex(current, vertexs[current]->data);
+    while(vertexs.find(current)!=vertexs.end()){//while current has a predecesor
+        next=current;
+        current=cameFrom[current];
+        result.insertVertex(current, vertexs[current]->data);
+        result.createEdge(current,next,d(*vertexs[current],*vertexs[next]));
+    }
+    return result;
+}
+
+template<typename data_t, typename weight_t>
+void Astar<data_t,weight_t>::resetSets(){
+    for(const auto& it: vertexs){
+        gScore[it.first]=INFINITY;
+        fScore[it.first]=INFINITY;
+    }
+}
