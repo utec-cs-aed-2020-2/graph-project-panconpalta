@@ -180,6 +180,7 @@ bool diGraph_t::isConnected() {
         traverse(visited, this->vertexes, it.first);
         if (visited.size() != this->vertexes.size())
             return false;
+        visited.clear();
     }
     return true;
 }
