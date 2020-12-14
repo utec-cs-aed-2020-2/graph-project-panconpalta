@@ -44,7 +44,7 @@ Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, int(*hf
     }
 }
 template<typename data_t, typename weight_t>
-Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, int(*hfunc)(vertex_t,vertex_t),int(*dfunc)(vertex_t,vertex_t)):h(hfunc),d(dfunc){
+Astar<data_t, weight_t>::Astar(DirectedGraph<data_t, weight_t> &graph, int(*hfunc)(vertex_t,vertex_t),int(*dfunc)(vertex_t,vertex_t)):h(hfunc),d(dfunc){
     for(const auto& it:graph.vertexes){
         vertexs[it.first]=it.second;
     }
