@@ -9,6 +9,7 @@
 #include "Algorithms/BellmanFord.h"
 #include "Algorithms/SCC.h"
 #include "Algorithms/Dijkstra.h"
+#include "Algorithms/Astar.h"
 #include "../Tester/tester.h"
 
 #endif //GRAPH_PROJECT_PANCONPALTA_PROJECT_H
