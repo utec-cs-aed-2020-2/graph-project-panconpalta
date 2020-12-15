@@ -10,6 +10,8 @@
 
 #define data_type std::string
 #define weight_type double
+#define data_t std::string
+#define weight_t double
 
 class Tester {
 private:
