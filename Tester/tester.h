@@ -348,33 +348,6 @@ void Tester::unDirectedSwitch(UnDirectedGraph<std::string, double> &graph, int i
             std::cout << "Graph cleared!\n\n";
             break;
         }
-        case 16: {
-          std::cout << "16. Astar\n";
-          id_t start;
-          id_t end;
-          std::cout << "Choose start vertex:";
-          std::cin >> start;
-          std::cout << "Choose end vertex:";
-          std::cin >> end;
-          try {
-            auto lambda1 =  [](vertex_t a,vertex_t b){
-              auto lo1=a->data.longitud;
-              auto la1=a->data.latitude;
-              auto lo2=b->data.longitud;
-              auto la2=b->data.latitude;
-              return sqrt(pow(la1 - la2, 2) + pow(lo1 - lo2, 2));
-            };
-            
-            Astar<data_type, weight_type> astar(graph, lambda1, lambda1);
-            astar.UnDirectedApply(start,end).display();
-          }
-          catch (std::out_of_range) {
-            std::cout << "Starting vertex or End vertex do not exist!\n";
-          }
-          
-          std::cout << "\n";
-          break;
-        }
     }
 }
 
@@ -575,33 +548,6 @@ void Tester::directedSwitch(DirectedGraph<std::string, double> &graph, int input
             scc.apply().display();
             std::cout << "\n";
             break;
-        }
-        case 16: {
-          std::cout << "16. Astar\n";
-          id_t start;
-          id_t end;
-          std::cout << "Choose start vertex:";
-          std::cin >> start;
-          std::cout << "Choose end vertex:";
-          std::cin >> end;
-          try {
-            auto lambda1 =  [](vertex_t a,vertex_t b){
-              auto lo1=a->data.longitud;
-              auto la1=a->data.latitude;
-              auto lo2=b->data.longitud;
-              auto la2=b->data.latitude;
-              return sqrt(pow(la1 - la2, 2) + pow(lo1 - lo2, 2));
-            };
-            
-            Astar<data_type, weight_type> astar(graph, lambda1, lambda1);
-            astar.DirectedApply(start,end).display();
-          }
-          catch (std::out_of_range) {
-            std::cout << "Starting vertex or End vertex do not exist!\n";
-          }
-          
-          std::cout << "\n";
-          break;
         }
     }
 
