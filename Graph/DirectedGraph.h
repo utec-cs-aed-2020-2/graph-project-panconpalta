@@ -102,7 +102,7 @@ bool diGraph_t::createEdge(id_t id1, id_t id2, weight_t w) {
         return false;
     auto edges = this->vertexes[id1]->edges;
     for (auto it = edges.begin(); it != edges.end(); ++it) {
-        if ((*it)->vertexes[0].id == id1 || (*it)->vertexes[1].id == id2)
+        if ((*it)->vertexes[0].id == id2 || (*it)->vertexes[1].id == id2)
             return false;
     }
     vertex_t *v = new vertex_t[2];
