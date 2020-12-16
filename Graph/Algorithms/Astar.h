@@ -3,12 +3,14 @@
 #ifdef NOCLION
 #include "../Graph.h"
 #else
+
 #include "Graph.h"
+
 #endif
 
 #include <limits>
 
-#define INFINITY std::numeric_limits<weight_t>::max
+#define INFINITY std::numeric_limits<weight_t>::max()
 #define AsPair std::pair<weight_t,vertex_t*>
 #define openset_t MyQueue<AsPair,std::vector<AsPair>,std::greater<AsPair>>
 
@@ -150,11 +152,11 @@ UnDirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::UnDiConstruct(id_t cu
     UnDirectedGraph<data_t, weight_t> result;
     id_t next;
     result.insertVertex(current, vertexs[current]->data);
-    while (vertexs.find(current) != vertexs.end()) {//while current has a predecesor
+    while (vertexs.find(current) != vertexs.end()) { //while current has a predecesor
         next = current;
         current = cameFrom[current];
         result.insertVertex(current, vertexs[current]->data);
-        result.createEdge(current, next, d(*vertexs[current], *vertexs[next]));
+        result.createEdge(current, next, d(vertexs[current]->data, vertexs[next]->data));
     }
     return result;
 }
@@ -168,7 +170,7 @@ DirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::DiConstruct(id_t curren
         next = current;
         current = cameFrom[current];
         result.insertVertex(current, vertexs[current]->data);
-        result.createEdge(current, next, d(*vertexs[current], *vertexs[next]));
+        result.createEdge(current, next, d(vertexs[current]->data, vertexs[next]->data));
     }
     return result;
 }
