@@ -1,6 +1,7 @@
-
 #compiled
+temp.*
 a.*
+testAstar.exe
 # vscode
 .vscode
 

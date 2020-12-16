@@ -30,6 +30,9 @@ private:
     friend
     class Dijkstra<data_t, weight_t>;
 
+    friend
+    class Astar<data_t,weight_t>;
+
 public:
     UnDirectedGraph();
 
