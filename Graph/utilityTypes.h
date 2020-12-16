@@ -36,7 +36,7 @@ class Graph;
 /////////////structures//////////////////////////
 template<typename data_t, typename weight_t>
 struct Edge {
-    vertex_t *vertexes;
+    vertex_t *vertexes;//dynamic array
     weight_t weight;
 
     void killSelf() {

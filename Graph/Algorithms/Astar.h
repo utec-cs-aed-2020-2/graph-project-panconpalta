@@ -8,7 +8,7 @@
 
 #include <limits>
 
-#define INFINITY std::numeric_limits<int>::max
+#define INFINITY std::numeric_limits<weight_t>::max
 #define AsPair std::pair<weight_t,vertex_t*>
 #define openset_t MyQueue<AsPair,std::vector<AsPair>,std::greater<AsPair>>
 
@@ -86,11 +86,11 @@ UnDirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::UnDirectedApply(id_t 
         //check for al the neighbors and evaluate them
         for (const auto &edge:current->edges) {
             //just getting the neighbor
-            neighbor = &(edge[0]);
-            if (current->id == neighbor->id) neighbor = &(edge[1]);
+            neighbor = &(edge->vertexes[0]);
+            if (current->id == neighbor->id) neighbor = &(edge->vertexes[1]);
             //gotten
 
-            newGScore = gScore[current->id] + d(*current, *neighbor);
+            newGScore = gScore[current->id] + d(current->data, neighbor->data);
             //if the the new gscore is better then add it 
             if (newGScore < gScore[neighbor->id]) {
                 cameFrom[neighbor->id] = current->id;
@@ -114,7 +114,7 @@ DirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::DirectedApply(id_t a, i
     openSet.push(std::make_pair(fScore[a], vertexs[a]));
     vertex_t *current = nullptr;
     vertex_t *neighbor = nullptr;
-    auto newGScore = INFINITY;
+    weight_t newGScore = INFINITY;
 
     while (!openSet.empty()) {
         current = openSet.top().second;
@@ -125,11 +125,11 @@ DirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::DirectedApply(id_t a, i
         //check for al the neighbors and evaluate them
         for (const auto &edge:current->edges) {
             //just getting the neighbor
-            neighbor = &(edge[0]);
-            if (current->id == neighbor->id) neighbor = &(edge[1]);
+            neighbor = &(edge->vertexes[0]);
+            if (current->id == neighbor->id) neighbor = &(edge->vertexes[1]);
             //gotten
 
-            newGScore = gScore[current->id] + d(*current, *neighbor);
+            newGScore = gScore[current->id] + d(current->data, neighbor->data);
             //if the the new gscore is better then add it 
             if (newGScore < gScore[neighbor->id]) {
                 cameFrom[neighbor->id] = current->id;

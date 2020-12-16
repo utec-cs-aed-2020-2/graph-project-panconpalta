@@ -1,2 +1,2 @@
 all:
-	g++.exe -DNOCLION .\Graph\Algorithms\temp.cpp -o testAstar
+	g++.exe -DNOCLION .\Graph\Algorithms\Astar_test.cpp -o testAstar

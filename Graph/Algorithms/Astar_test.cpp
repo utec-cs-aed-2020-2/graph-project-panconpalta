@@ -47,8 +47,8 @@ int main(){
     g1.display();
     g2.display();
 
-    A1.DirectedApply("a","c").display();
-    A2.UnDirectedApply("a","c").display();
+    A1.DirectedApply("a","d").display();
+    A2.UnDirectedApply("a","d").display();
 
     return 0;
 }
