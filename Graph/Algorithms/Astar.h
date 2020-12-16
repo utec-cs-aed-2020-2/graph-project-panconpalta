@@ -26,7 +26,8 @@ class Astar {
 
     weight_t (*h)(data_t, data_t) = nullptr;
 
-    weight_t (*d)(data_t, data_t) = nullptr;
+    //weight_t (*d)(data_t, data_t) = nullptr;
+    weight_t d(vertex_t,vertex_t);
 
     umap<id_t, vertex_t *> vertexs;
     map<id_t, id_t> cameFrom;
@@ -40,9 +41,9 @@ class Astar {
     DirectedGraph<data_t, weight_t> DiConstruct(id_t);
 
 public:
-    explicit Astar(UnDirectedGraph<data_t, weight_t> &, weight_t(*)(data_t, data_t), weight_t(*)(data_t, data_t));
+    explicit Astar(UnDirectedGraph<data_t, weight_t> &, weight_t(*)(data_t, data_t));
 
-    explicit Astar(DirectedGraph<data_t, weight_t> &, weight_t(*)(data_t, data_t), weight_t(*)(data_t, data_t));
+    explicit Astar(DirectedGraph<data_t, weight_t> &, weight_t(*)(data_t, data_t));
 
 
     UnDirectedGraph<data_t, weight_t> UnDirectedApply(id_t, id_t);
@@ -54,16 +55,23 @@ public:
 };
 
 template<typename data_t, typename weight_t>
-Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, weight_t(*hfunc)(data_t, data_t),
-                               weight_t(*dfunc)(data_t, data_t)):h(hfunc), d(dfunc) {
+weight_t Astar<data_t,weight_t>::d(vertex_t a, vertex_t b){
+    for(const auto &edge:a.edges)
+        if(edge->vertexes[1].id==b.id || edge->vertexes[0].id==b.id)
+            return edge->weight;
+
+    return INFINITY;
+}
+
+template<typename data_t, typename weight_t>
+Astar<data_t, weight_t>::Astar(UnDirectedGraph<data_t, weight_t> &graph, weight_t(*hfunc)(data_t, data_t)):h(hfunc){
     for (const auto &it:graph.vertexes) {
         vertexs[it.first] = it.second;
     }
 }
 
 template<typename data_t, typename weight_t>
-Astar<data_t, weight_t>::Astar(DirectedGraph<data_t, weight_t> &graph, weight_t(*hfunc)(data_t, data_t),
-                               weight_t(*dfunc)(data_t, data_t)):h(hfunc), d(dfunc) {
+Astar<data_t, weight_t>::Astar(DirectedGraph<data_t, weight_t> &graph, weight_t(*hfunc)(data_t, data_t)):h(hfunc){
     for (const auto &it:graph.vertexes) {
         vertexs[it.first] = it.second;
     }
@@ -92,7 +100,7 @@ UnDirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::UnDirectedApply(id_t 
             if (current->id == neighbor->id) neighbor = &(edge->vertexes[1]);
             //gotten
 
-            newGScore = gScore[current->id] + d(current->data, neighbor->data);
+            newGScore = gScore[current->id] + d(*current, *neighbor);
             //if the the new gscore is better then add it 
             if (newGScore < gScore[neighbor->id]) {
                 cameFrom[neighbor->id] = current->id;
@@ -131,7 +139,7 @@ DirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::DirectedApply(id_t a, i
             if (current->id == neighbor->id) neighbor = &(edge->vertexes[1]);
             //gotten
 
-            newGScore = gScore[current->id] + d(current->data, neighbor->data);
+            newGScore = gScore[current->id] + d(*current, *neighbor);
             //if the the new gscore is better then add it 
             if (newGScore < gScore[neighbor->id]) {
                 cameFrom[neighbor->id] = current->id;
@@ -152,11 +160,11 @@ UnDirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::UnDiConstruct(id_t cu
     UnDirectedGraph<data_t, weight_t> result;
     id_t next;
     result.insertVertex(current, vertexs[current]->data);
-    while (vertexs.find(current) != vertexs.end()) { //while current has a predecesor
+    while (vertexs.find(cameFrom[current]) != vertexs.end()) { //while current has a predecesor
         next = current;
         current = cameFrom[current];
         result.insertVertex(current, vertexs[current]->data);
-        result.createEdge(current, next, d(vertexs[current]->data, vertexs[next]->data));
+        result.createEdge(current, next, d(*vertexs[current], *vertexs[next]));
     }
     return result;
 }
@@ -166,11 +174,11 @@ DirectedGraph<data_t, weight_t> Astar<data_t, weight_t>::DiConstruct(id_t curren
     DirectedGraph<data_t, weight_t> result;
     id_t next;
     result.insertVertex(current, vertexs[current]->data);
-    while (vertexs.find(current) != vertexs.end()) {//while current has a predecesor
+    while (vertexs.find(cameFrom[current]) != vertexs.end()) {//while current has a predecesor
         next = current;
         current = cameFrom[current];
         result.insertVertex(current, vertexs[current]->data);
-        result.createEdge(current, next, d(vertexs[current]->data, vertexs[next]->data));
+        result.createEdge(current, next, d(*vertexs[current], *vertexs[next]));
     }
     return result;
 }

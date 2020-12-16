@@ -38,16 +38,21 @@ int main(){
         g2.insertVertex(s[i],points[i]);
     }
     for(int i=0;i<3;i++){
-        g1.createEdge(s[i],s[i+1],1);
-        g2.createEdge(s[i],s[i+1],1);
+        g1.createEdge(s[i],s[i+1],i);
+        g2.createEdge(s[i],s[i+1],i);
     }
 
-    Astar<point,double> A1(g1,heuristic,heuristic);
-    Astar<point,double> A2(g2,heuristic,heuristic);
+    Astar<point,double> A1(g1,heuristic);
+    Astar<point,double> A2(g2,heuristic);
+
+    std::cout<<"Directed graph\n";
     g1.display();
+    std::cout<<"UnDirected graph\n";
     g2.display();
 
+    std::cout<<"A* Directed graph\n";
     A1.DirectedApply("a","d").display();
+    std::cout<<"A* UnDirected graph\n";
     A2.UnDirectedApply("a","d").display();
 
     return 0;
